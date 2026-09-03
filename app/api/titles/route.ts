@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag, revalidatePath } from "next/cache";
 import { getTitleDetails } from "@/lib/tmdb";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
@@ -51,7 +52,11 @@ export async function POST(request: Request) {
     const { data: existing } = await supabase
       .from("titles").select("slug").eq("kind", "movie").eq("tmdb_id", tmdbId).maybeSingle();
     if (existing) {
-      return NextResponse.json({ slug: (existing as { slug: string }).slug, path: `/movies/${(existing as { slug: string }).slug}`, created: false });
+      const existingPath = `/movies/${(existing as { slug: string }).slug}`;
+      // The page may be holding a cached 404 from before it existed.
+      revalidateTag("catalogue");
+      revalidatePath(existingPath);
+      return NextResponse.json({ slug: (existing as { slug: string }).slug, path: existingPath, created: false });
     }
   }
 
@@ -74,7 +79,10 @@ export async function POST(request: Request) {
     const { data: existing } = await supabase
       .from("titles").select("slug").eq("kind", "show").eq("tvdb_id", details.tvdbId).maybeSingle();
     if (existing) {
-      return NextResponse.json({ slug: (existing as { slug: string }).slug, path: `/shows/${(existing as { slug: string }).slug}`, created: false });
+      const existingPath = `/shows/${(existing as { slug: string }).slug}`;
+      revalidateTag("catalogue");
+      revalidatePath(existingPath);
+      return NextResponse.json({ slug: (existing as { slug: string }).slug, path: existingPath, created: false });
     }
   }
 
@@ -124,5 +132,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not add that title." }, { status: 500 });
   }
 
-  return NextResponse.json({ slug, path: `${kind === "tv" ? "/shows" : "/movies"}/${slug}`, created: true });
+  const path = `${kind === "tv" ? "/shows" : "/movies"}/${slug}`;
+
+  // Purge before returning, so the redirect that follows renders the new row
+  // rather than a cached catalogue that predates it. Without this the page 404s
+  // and the 404 itself gets cached.
+  revalidateTag("catalogue");
+  revalidatePath(path);
+  revalidatePath("/");
+
+  return NextResponse.json({ slug, path, created: true });
 }
