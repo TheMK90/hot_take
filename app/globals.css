@@ -1,0 +1,152 @@
+:root {
+  --bg: #fdf6ef;
+  --bg2: #ffffff;
+  --ink: #1d0f0c;
+  --dim: #8a6a60;
+  --brand: #cf1020;
+  --onbrand: #fffaf5;
+  --line: rgba(29, 15, 12, 0.13);
+  --card: #ffffff;
+  --card2: #fff5ee;
+  --rate: #cf1020;
+  --rateoff: rgba(29, 15, 12, 0.16);
+  --frameA: #b0161f;
+  --frameB: #7d0d15;
+  --matte: #fff8f0;
+  --hdr: rgba(253, 246, 239, 0.88);
+  --shadow: 0 16px 40px rgba(120, 20, 10, 0.14);
+  --stripe-op: 1;
+  --photo-op: 0;
+  --neon: #cf1020;
+  --gold: #b8862c;
+  --plate-bg: #fffaf2;
+  --plate-border: 4px solid #8a5a12;
+  --plate-radius: 4px;
+  --plate-shadow: 0 26px 64px rgba(40, 4, 4, 0.4), 0 0 46px rgba(255, 196, 110, 0.45);
+  --crest-h: 54px;
+  --bulb-h: 16px;
+  --valance-h: 22px;
+  --plate-pad: 42px 40px 40px;
+  --plate-txt: var(--ink);
+  --plate-frame: 8px solid #8f121c;
+  --logo-bg: #c0391c;
+  --logo-ink: #fdf3e7;
+}
+
+[data-hottake-theme="dark"] {
+  --bg: #07060a;
+  --bg2: #0c0a0f;
+  --ink: #fbf4e4;
+  --dim: #cbb894;
+  --brand: #f0d489;
+  --onbrand: #0a0810;
+  --line: rgba(240, 212, 137, 0.26);
+  --card: #100e13;
+  --card2: #15121a;
+  --rate: #f3dc9b;
+  --rateoff: rgba(251, 244, 228, 0.18);
+  --frameA: #d4ae3c;
+  --frameB: #8a6d16;
+  --matte: #0e0c10;
+  --hdr: rgba(7, 6, 10, 0.82);
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.65);
+  --plate-bg: transparent;
+  --plate-border: 0 solid transparent;
+  --plate-radius: 0;
+  --plate-shadow: none;
+  --crest-h: 0px;
+  --bulb-h: 0px;
+  --valance-h: 0px;
+  --plate-pad: 12px 0 0;
+  --plate-txt: var(--ink);
+  --plate-frame: 0 solid transparent;
+  --logo-bg: #0a0810;
+  --logo-ink: #f0d489;
+  --stripe-op: 0;
+  --photo-op: 0.62;
+  --neon: #8fd3ff;
+  --gold: #f0d489;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-barlow), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--ink);
+}
+
+button {
+  font: inherit;
+}
+
+@keyframes bulbchase {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 56px 0;
+  }
+}
+
+@keyframes swayin {
+  0% {
+    transform: rotate(-1.4deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes neonpulse {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+[data-rail] {
+  scrollbar-width: none;
+}
+
+[data-rail]::-webkit-scrollbar {
+  display: none;
+}
+
+.hover-brand:hover {
+  color: var(--brand) !important;
+}
+
+.hover-brand-border:hover {
+  border-color: var(--brand) !important;
+}
+
+.hover-brighter:hover {
+  filter: brightness(1.08);
+}
+
+.hover-fill-brand:hover {
+  background: var(--brand) !important;
+  color: var(--onbrand) !important;
+  border-color: var(--brand) !important;
+}

@@ -27,3 +27,8 @@ __pycache__/
 dist/
 build/
 out/
+.next/
+next-env.d.ts
+
+# TypeScript
+*.tsbuildinfo
