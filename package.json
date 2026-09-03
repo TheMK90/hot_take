@@ -1,0 +1,12 @@
+{
+  "name": "hot-take",
+  "version": "0.0.0",
+  "private": true,
+  "description": "rate it. review it. roast it.",
+  "scripts": {
+    "render-logos": "node scripts/render-logo-png.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
+  }
+}

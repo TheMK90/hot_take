@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Hot Take compact app icon, light">
+<title>Hot Take compact app icon, light</title>
+<rect width="1024" height="1024" rx="229.1" fill="#FDEDE0"/>
+<g transform="translate(512.0,547.8) scale(8.9600)">
+  <path d="M 0 -44 C 8 -26 24 -18 28 -2 C 33 18 19 36 0 36 C -19 36 -33 18 -28 -2 C -25 -14 -14 -22 -12 -34 C -6 -28 -2 -36 0 -44 Z" fill="#CE4322"/>
+  <circle cx="-8.5" cy="-20" r="5" fill="#2A1C14"/>
+  <circle cx="8.5" cy="-20" r="5" fill="#2A1C14"/>
+  <circle cx="0" cy="8" r="19" fill="#FFF6EC"/>
+  <circle cx="0" cy="8" r="6" fill="#CE4322"/>
+  <circle cx="0" cy="-3.5" r="5" fill="#CE4322"/>
+  <circle cx="11" cy="4" r="5" fill="#CE4322"/>
+  <circle cx="6.8" cy="17" r="5" fill="#CE4322"/>
+  <circle cx="-6.8" cy="17" r="5" fill="#CE4322"/>
+  <circle cx="-11" cy="4" r="5" fill="#CE4322"/>
+</g>
+</svg>
