@@ -120,8 +120,9 @@ now") instead of crashing the page.
       catalogue so a one-of-a-kind genre still gets suggestions). Lobby posters,
       review card titles, and Top 10 entries all link there now.
 - [ ] User profile page (handle, avatar, rating history, own reviews)
-- [ ] Custom 404 page (an invalid `/movies/slug` currently falls through to Next's
-      stock "This page could not be found", not a themed one)
+- [x] Custom 404 page — `app/not-found.tsx`, with the site's header, footer, chat widget
+      and theming instead of Next's bare error page. It points people at the search box,
+      since a missing title can usually be added from there
 - [ ] Real destinations for the footer links (Community rules, Cinemas, Archive currently just anchor back to sections on the homepage)
 - [x] TV show detail pages — `/shows/[slug]`, with `ShowHero` mirroring `MovieHero`.
       The "On the small screen" cards link into them. `MovieReviews` became
