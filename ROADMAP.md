@@ -27,36 +27,61 @@ placeholder boxes rather than erroring.
 Each phase below ends with a **How to verify** block: the commands to run and what
 you should see if the phase is genuinely done.
 
-## Phase 0 — Decisions to lock in before building
+## Phase 0 — Decisions to lock in before building ✅ DONE
 
-- [ ] Confirm v1 scope vs. "later": which items below ship at launch vs. post-launch
-- [ ] Design the rating system: replace the plain 1–5 dot picker with the "creative thumbs up" input from the notes
-- [ ] Design the multi-layer score badge: an Oscars/Razzies-style icon overlay on top/bottom rated films (Rotten-Tomatoes-icon equivalent) — what score thresholds trigger which badge
-- [ ] Decide what "easter eggs" means concretely (a few specific hidden interactions to build, not just the idea)
-- [ ] Decide what "recap" means (per-user "your year in film" style recap? site-wide annual recap?)
-- [ ] Confirm "Related movies" stays cut (crossed out in the notes) so it's not accidentally scoped back in
-- [ ] Decide: is "Now showing" / cinema showtimes real data going forward, or does it stay a static decorative section?
+All seven answered in **[DECISIONS.md](DECISIONS.md)** — read that, not this summary.
 
-**How to verify Phase 0:** nothing to run — every box above is a written decision.
-Phase 0 is done when someone can read the answers without asking you.
+- [x] v1 scope vs. "later" — **lean launch**: search, genre filter, detail page, heat-scale
+      rating, reviews, profile, 404. Badges, recap, showtimes, decade slider, easter eggs
+      and add/edit all land after v1
+- [x] Rating system — **the heat scale**: five flames, whole steps, `radiogroup` semantics
+      so it works from the keyboard
+- [x] Score badge thresholds — Golden Reel ≥ 90, Certified Hot ≥ 75, Cold Take ≤ 25,
+      The Turkey ≤ 10, each gated on a minimum rating count so a film with two votes wins
+      nothing
+- [x] Easter eggs — **random and site-wide**: a provider in the root layout rolls once per
+      page view (~5%, one per session) from a pool of five page-agnostic eggs, plus two
+      that stay earned rather than random
+- [x] Recap — **both, site-wide first**: "Hot Take's Year" works from aggregate data on day
+      one; the personal "Your Year in Film" follows once there is history
+- [x] Related movies — **confirmed cut**, and recorded so it is not quietly scoped back in
+- [x] "Now showing" — **becomes real data**, but post-v1; stays visibly decorative until
+      then, and must not imply bookable screenings
 
-## Phase 1 — New features from the notes (built against mock data)
+**How to verify Phase 0:** nothing to run. Open [DECISIONS.md](DECISIONS.md) and check you
+can answer "what are we building?" from it without asking anyone. If a decision there turns
+out wrong, change it in DECISIONS.md first and let this roadmap follow.
 
-- [ ] Search bar: make it functional (search by film name) over `lib/data.ts`
-- [ ] Browse/filter by category (genre) — the existing "Browse by genre" tiles should actually filter
-- [ ] Decade slider / timeline filter for browsing films
-- [ ] "Add movies" flow (decide: open to any signed-in user, or admin-only) — writes to local/mock state for now
+## Phase 1 — v1 features (built against mock data)
+
+Scoped down to the lean launch agreed in [DECISIONS.md](DECISIONS.md) §1. Everything
+deferred is listed under "After v1" below — it is not dropped, just not blocking launch.
+
+- [ ] Search bar: make it functional (search by film name) over `lib/data.ts` — the input
+      at `components/Header.tsx` already exists but has no handler
+- [ ] Browse/filter by category (genre) — the "Browse by genre" tiles are currently
+      `href="#genres"` anchors that scroll instead of filtering
+- [ ] Heat-scale rating input (DECISIONS §2): one component, `readonly` mode replaces
+      `RateDots` for display, interactive mode is the input. Build it as a real
+      `radiogroup` from the start — retrofitting keyboard support is worse than doing it now
+- [ ] Rating history — a signed-in user's past ratings/reviews, from local state for now
+
+### After v1 — not blocking launch
+
+- [ ] Score badges (DECISIONS §3) — needs real rating volume before the thresholds mean anything
+- [ ] Site-wide recap, "Hot Take's Year" (DECISIONS §5)
+- [ ] Real showtimes (DECISIONS §7) — provider, cost and location all still open
+- [ ] Decade slider / timeline filter
+- [ ] Easter eggs (DECISIONS §4) — the provider plus the five-egg pool
+- [ ] "Add movies" flow (decide: any signed-in user, or admin-only)
 - [ ] "Edit movie entries" flow (likely admin-only, or an edit-suggestion/moderation flow)
-- [ ] Rating history — a page showing a signed-in user's past ratings/reviews (from local state)
-- [ ] The redesigned rating input (creative thumbs-up) from Phase 0
-- [ ] The Oscars/Razzies score badge from Phase 0
-- [ ] Easter eggs (once concretely scoped in Phase 0)
-- [ ] Recap feature (once concretely scoped in Phase 0)
+- [ ] Personal recap, "Your Year in Film" (DECISIONS §5)
 
-**How to verify Phase 1:** `npm run dev`, then in the browser:
-type a film name in the header search and confirm the rail narrows; click a genre
-tile and confirm only that genre shows; drag the decade slider and confirm the set
-changes; sign in, rate a film, reload the page and confirm the rating survived.
+**How to verify Phase 1:** `npm run dev`, then in the browser: type a film name in the
+header search and confirm the rail narrows; click a genre tile and confirm only that genre
+shows; rate a film, reload, and confirm the rating survived. Then unplug your mouse — tab
+to the rating input, set a score with the arrow keys alone, and confirm a screen reader
+announces the label. If that fails, the rating input is not done.
 
 ## Phase 2 — Supporting pages the above needs
 
