@@ -22,7 +22,25 @@ The app runs without the key — posters just fall back to placeholder boxes.
 | `npm run build` | Production build, including type and lint checks |
 | `npm start` | Serve the production build |
 | `npm run lint` | ESLint |
+| `npm run clean` | Delete the `.next` build cache (see below) |
 | `npm run render-logos` | Rebuild `assets/logo/png` from the SVG masters |
+
+### If you hit `Cannot find module './563.js'`
+
+A stale or half-written `.next` cache. It usually means `next dev` and `next build` ran
+against the same `.next` directory at once, or a running server held files open while
+something tried to delete them — Windows will not remove a locked file, so you end up with
+a build that is missing chunks.
+
+Stop every running dev/build process first, then:
+
+```bash
+npm run clean
+npm run dev
+```
+
+The stop-first part matters: running `clean` while a server is up silently fails to delete
+the locked files and leaves the cache in exactly the broken state you were trying to fix.
 
 ## Posters
 

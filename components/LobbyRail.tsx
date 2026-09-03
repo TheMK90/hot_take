@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { filterMovies } from "@/lib/data";
 import { HeatScale } from "@/components/HeatScale";
 import { useApp } from "@/components/ThemeUserProvider";
@@ -321,7 +322,7 @@ export function LobbyRail({ posters }: { posters: Record<string, string | null> 
       >
         {movies.map((m, i) => (
           <article key={m.slug} data-card="1" style={{ flex: "none", width: 330, scrollSnapAlign: "center", transformStyle: "preserve-3d", willChange: "transform" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Link href={`/movies/${m.slug}`} style={{ display: "flex", flexDirection: "column", alignItems: "center", color: "inherit" }}>
               <div style={{ width: 1, height: 34, background: "var(--line)" }} />
               <div style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--frameB)", marginBottom: -6 }} />
               <div
@@ -341,7 +342,7 @@ export function LobbyRail({ posters }: { posters: Record<string, string | null> 
                 </p>
                 <HeatScale score={m.score} />
               </div>
-            </div>
+            </Link>
           </article>
         ))}
       </div>

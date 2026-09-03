@@ -44,7 +44,9 @@ All seven answered in **[DECISIONS.md](DECISIONS.md)** — read that, not this s
       that stay earned rather than random
 - [x] Recap — **both, site-wide first**: "Hot Take's Year" works from aggregate data on day
       one; the personal "Your Year in Film" follows once there is history
-- [x] Related movies — **confirmed cut**, and recorded so it is not quietly scoped back in
+- [x] Related movies — originally **cut**, then **reversed**: explicitly requested for the
+      movie profile page and shipped as `components/SimilarMovies.tsx`. DECISIONS §6 records
+      the reversal and why
 - [x] "Now showing" — **becomes real data**, but post-v1; stays visibly decorative until
       then, and must not imply bookable screenings
 
@@ -91,10 +93,17 @@ announces the label. If that fails, the rating input is not done.
 
 ## Phase 2 — Supporting pages the above needs
 
-- [ ] Per-movie detail page (currently posters/titles don't link anywhere — needed for search results, genre browsing, and "your rating history" to have somewhere to point to)
+- [x] ~~Per-movie detail page~~ — `/movies/[slug]`: poster, summary, director, release
+      date, runtime, score, showtimes (or a fallback message), reviews for that title
+      (community + the viewer's own), a "write a review" CTA prefilled with the film,
+      and a "you might also like" rail (same genre, backfilled with the rest of the
+      catalogue so a one-of-a-kind genre still gets suggestions). Lobby posters,
+      review card titles, and Top 10 entries all link there now.
 - [ ] User profile page (handle, avatar, rating history, own reviews)
-- [ ] 404 page
+- [ ] Custom 404 page (an invalid `/movies/slug` currently falls through to Next's
+      stock "This page could not be found", not a themed one)
 - [ ] Real destinations for the footer links (Community rules, Cinemas, Archive currently just anchor back to sections on the homepage)
+- [ ] TV show detail pages — shows still have no equivalent of the movie profile page
 
 **How to verify Phase 2:** `npm run dev`, then click a poster — it should open that
 film's page rather than doing nothing. Visit `/some-nonsense-url` and confirm you get

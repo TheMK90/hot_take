@@ -100,7 +100,7 @@ export function Hero() {
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 24, flexWrap: "wrap" }}>
             <button
               type="button"
-              onClick={openComposer}
+              onClick={() => openComposer()}
               className="hover-brighter"
               style={{
                 padding: "13px 24px",

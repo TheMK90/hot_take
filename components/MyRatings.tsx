@@ -51,7 +51,7 @@ export function MyRatings() {
           </p>
           <button
             type="button"
-            onClick={openComposer}
+            onClick={() => openComposer()}
             className="hover-fill-brand"
             style={{
               padding: "10px 20px",

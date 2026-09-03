@@ -11,20 +11,159 @@ export type Movie = {
   runtimeMin: number;
   score: number; // out of 5, in whole steps (HeatScale fills i < score)
   tmdbId: number;
+  director: string;
+  releaseDate: string; // human-readable, for the profile page
+  summary: string;
 };
 
 export const lobbyMovies: Movie[] = [
-  { slug: "shawshank-redemption", title: "The Shawshank Redemption", genre: "Drama", year: 1994, runtimeMin: 142, score: 5, tmdbId: 278 },
-  { slug: "the-godfather", title: "The Godfather", genre: "Classics", year: 1972, runtimeMin: 175, score: 5, tmdbId: 238 },
-  { slug: "the-dark-knight", title: "The Dark Knight", genre: "Thriller", year: 2008, runtimeMin: 152, score: 5, tmdbId: 155 },
-  { slug: "pulp-fiction", title: "Pulp Fiction", genre: "Crime", year: 1994, runtimeMin: 154, score: 4, tmdbId: 680 },
-  { slug: "parasite", title: "Parasite", genre: "Thriller", year: 2019, runtimeMin: 132, score: 5, tmdbId: 496243 },
-  { slug: "spirited-away", title: "Spirited Away", genre: "Animation", year: 2001, runtimeMin: 125, score: 5, tmdbId: 129 },
-  { slug: "interstellar", title: "Interstellar", genre: "Epic", year: 2014, runtimeMin: 169, score: 4, tmdbId: 157336 },
-  { slug: "get-out", title: "Get Out", genre: "Horror", year: 2017, runtimeMin: 104, score: 4, tmdbId: 419430 },
-  { slug: "blade-runner-2049", title: "Blade Runner 2049", genre: "Drama", year: 2017, runtimeMin: 164, score: 4, tmdbId: 335984 },
-  { slug: "oppenheimer", title: "Oppenheimer", genre: "Drama", year: 2023, runtimeMin: 180, score: 4, tmdbId: 872585 },
+  {
+    slug: "shawshank-redemption",
+    title: "The Shawshank Redemption",
+    genre: "Drama",
+    year: 1994,
+    runtimeMin: 142,
+    score: 5,
+    tmdbId: 278,
+    director: "Frank Darabont",
+    releaseDate: "September 23, 1994",
+    summary:
+      "A banker convicted of a murder he didn't commit spends two decades in Shawshank State Penitentiary, forming an unlikely friendship with a fellow inmate and chipping away, patiently, at a way out.",
+  },
+  {
+    slug: "the-godfather",
+    title: "The Godfather",
+    genre: "Classics",
+    year: 1972,
+    runtimeMin: 175,
+    score: 5,
+    tmdbId: 238,
+    director: "Francis Ford Coppola",
+    releaseDate: "March 24, 1972",
+    summary:
+      "The aging patriarch of an organized crime dynasty transfers control of his empire to his reluctant youngest son, who is drawn deeper into the family business than he ever intended to go.",
+  },
+  {
+    slug: "the-dark-knight",
+    title: "The Dark Knight",
+    genre: "Thriller",
+    year: 2008,
+    runtimeMin: 152,
+    score: 5,
+    tmdbId: 155,
+    director: "Christopher Nolan",
+    releaseDate: "July 18, 2008",
+    summary:
+      "Batman raises the stakes in his war on crime with the help of Lieutenant Gordon and DA Harvey Dent, but a rising criminal mastermind known as the Joker throws Gotham into chaos and forces impossible choices.",
+  },
+  {
+    slug: "pulp-fiction",
+    title: "Pulp Fiction",
+    genre: "Crime",
+    year: 1994,
+    runtimeMin: 154,
+    score: 4,
+    tmdbId: 680,
+    director: "Quentin Tarantino",
+    releaseDate: "October 14, 1994",
+    summary:
+      "The lives of two hitmen, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption, told wildly out of order.",
+  },
+  {
+    slug: "parasite",
+    title: "Parasite",
+    genre: "Thriller",
+    year: 2019,
+    runtimeMin: 132,
+    score: 5,
+    tmdbId: 496243,
+    director: "Bong Joon-ho",
+    releaseDate: "May 30, 2019",
+    summary:
+      "A struggling family cons its way into working for a wealthy household one job at a time, until the arrangement uncovers something buried in the house that changes everything.",
+  },
+  {
+    slug: "spirited-away",
+    title: "Spirited Away",
+    genre: "Animation",
+    year: 2001,
+    runtimeMin: 125,
+    score: 5,
+    tmdbId: 129,
+    director: "Hayao Miyazaki",
+    releaseDate: "July 20, 2001",
+    summary:
+      "Moving to a new neighborhood, a sullen ten-year-old girl wanders into a world ruled by gods and spirits, where humans are changed into beasts, and must find a way to free her parents and go home.",
+  },
+  {
+    slug: "interstellar",
+    title: "Interstellar",
+    genre: "Epic",
+    year: 2014,
+    runtimeMin: 169,
+    score: 4,
+    tmdbId: 157336,
+    director: "Christopher Nolan",
+    releaseDate: "November 7, 2014",
+    summary:
+      "With Earth's soil failing crop by crop, a former pilot leads a crew through a wormhole near Saturn in search of a new home for humanity, racing time that moves differently for everyone he leaves behind.",
+  },
+  {
+    slug: "get-out",
+    title: "Get Out",
+    genre: "Horror",
+    year: 2017,
+    runtimeMin: 104,
+    score: 4,
+    tmdbId: 419430,
+    director: "Jordan Peele",
+    releaseDate: "February 24, 2017",
+    summary:
+      "A young man visits his white girlfriend's family estate for the first time, where the polite hospitality masks something far more sinister waiting just beneath the surface.",
+  },
+  {
+    slug: "blade-runner-2049",
+    title: "Blade Runner 2049",
+    genre: "Drama",
+    year: 2017,
+    runtimeMin: 164,
+    score: 4,
+    tmdbId: 335984,
+    director: "Denis Villeneuve",
+    releaseDate: "October 6, 2017",
+    summary:
+      "A young blade runner unearths a long-buried secret that has the potential to plunge what's left of society into chaos, leading him to a former blade runner missing for thirty years.",
+  },
+  {
+    slug: "oppenheimer",
+    title: "Oppenheimer",
+    genre: "Drama",
+    year: 2023,
+    runtimeMin: 180,
+    score: 4,
+    tmdbId: 872585,
+    director: "Christopher Nolan",
+    releaseDate: "July 21, 2023",
+    summary:
+      "The story of J. Robert Oppenheimer's role in the development of the atomic bomb during World War II, and the reckoning with what he helped bring into the world that followed him for the rest of his life.",
+  },
 ];
+
+export function getMovieBySlug(slug: string): Movie | undefined {
+  return lobbyMovies.find((m) => m.slug === slug);
+}
+
+/**
+ * Titles for the profile page's "similar" rail: same genre first, then backfilled
+ * with the rest of the catalogue (highest rated first) so a one-of-a-kind genre
+ * still gets a full set of suggestions rather than an empty rail.
+ */
+export function similarMovies(movie: Movie, limit = 4): Movie[] {
+  const others = lobbyMovies.filter((m) => m.slug !== movie.slug);
+  const sameGenre = others.filter((m) => m.genre === movie.genre);
+  const rest = others.filter((m) => m.genre !== movie.genre).sort((a, b) => b.score - a.score);
+  return [...sameGenre, ...rest].slice(0, limit);
+}
 
 export type Show = {
   slug: string;

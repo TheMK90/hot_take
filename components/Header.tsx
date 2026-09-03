@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { useApp } from "@/components/ThemeUserProvider";
 
@@ -30,7 +31,7 @@ export function Header() {
           rowGap: 12,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, color: "inherit" }}>
           <Logo />
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <span
@@ -58,7 +59,7 @@ export function Header() {
               Reviews by film fans
             </span>
           </div>
-        </div>
+        </Link>
 
         <nav
           style={{
@@ -74,16 +75,16 @@ export function Header() {
             fontWeight: 600,
           }}
         >
-          <a href="#reviews" className="hover-brand" style={{ color: "var(--ink)" }}>
+          <a href="/#reviews" className="hover-brand" style={{ color: "var(--ink)" }}>
             Reviews
           </a>
-          <a href="#showing" className="hover-brand" style={{ color: "var(--ink)" }}>
+          <a href="/#showing" className="hover-brand" style={{ color: "var(--ink)" }}>
             Now showing
           </a>
-          <a href="#top10" className="hover-brand" style={{ color: "var(--ink)" }}>
+          <a href="/#top10" className="hover-brand" style={{ color: "var(--ink)" }}>
             Top 10
           </a>
-          <a href="#genres" className="hover-brand" style={{ color: "var(--ink)" }}>
+          <a href="/#genres" className="hover-brand" style={{ color: "var(--ink)" }}>
             Genres
           </a>
         </nav>
@@ -215,7 +216,7 @@ export function Header() {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <button
                 type="button"
-                onClick={openComposer}
+                onClick={() => openComposer()}
                 className="hover-brighter"
                 style={{
                   padding: "9px 16px",

@@ -152,11 +152,18 @@ user with fewer than 10 rated films rather than showing a sad empty page.
 
 ---
 
-## 6. Related movies — confirmed cut
+## 6. Related movies — cut, then reversed
 
-**Stays cut**, as crossed out in the notes. Genre browsing and search cover discovery for
-v1. Recording it here so it is not quietly scoped back in: if it returns, it needs a new
-decision, not an assumption.
+**Originally cut**, as crossed out in the notes: genre browsing and search were judged
+enough discovery for v1.
+
+**Reversed.** Building the movie profile page made the gap obvious — a detail page that
+ends in nothing gives the reader no next film, and the "where do I go now?" problem the
+original cut waved away is much sharper on a detail page than on the homepage. Shipped as
+`components/SimilarMovies.tsx`.
+
+Recorded here rather than quietly amended, because the original decision was explicitly
+"do not scope this back in without a new decision". This is that new decision.
 
 ---
 
