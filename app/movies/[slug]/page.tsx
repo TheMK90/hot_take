@@ -12,6 +12,9 @@ import { similarMovies, showtimes } from "@/lib/data";
 import { getMovies, getMovie, getReviewsForSlug } from "@/lib/catalogue";
 import { getPoster, getBackdrop, getPosterMap, type ArtLookup } from "@/lib/fanart";
 
+// A title added after the last deploy still gets a page, rendered on demand.
+export const dynamicParams = true;
+
 // Built from the database, so a title added there gets a page without a code change.
 export async function generateStaticParams() {
   return (await getMovies()).map((m) => ({ slug: m.slug }));

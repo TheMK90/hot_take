@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useApp } from "@/components/ThemeUserProvider";
 
 // The header search box.
@@ -28,7 +29,10 @@ const EMPTY: SearchResponse = { catalogue: [], external: [], tmdbEnabled: false 
 
 export function GlobalSearch() {
   const { query, setQuery, openComposer } = useApp();
+  const router = useRouter();
   const [results, setResults] = useState<SearchResponse>(EMPTY);
+  const [adding, setAdding] = useState<number | null>(null);
+  const [addError, setAddError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const boxRef = useRef<HTMLDivElement | null>(null);
@@ -79,6 +83,32 @@ export function GlobalSearch() {
       document.removeEventListener("keydown", onKey);
     };
   }, []);
+
+  // An external result has no page yet. Clicking one adds it to the catalogue
+  // from its TMDb id and then opens the page that write created.
+  async function openExternal(hit: ExternalHit) {
+    setAdding(hit.tmdbId);
+    setAddError(null);
+    try {
+      const res = await fetch("/api/titles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: hit.kind, tmdbId: hit.tmdbId }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAddError(data.error ?? "Could not open that title.");
+        setAdding(null);
+        return;
+      }
+      setOpen(false);
+      setAdding(null);
+      router.push(data.path);
+    } catch {
+      setAddError("Could not reach the server.");
+      setAdding(null);
+    }
+  }
 
   const hasResults = results.catalogue.length > 0 || results.external.length > 0;
   const showPanel = open && query.trim().length >= 2;
@@ -173,14 +203,37 @@ export function GlobalSearch() {
             <>
               <SectionLabel>Everything else</SectionLabel>
               {results.external.map((hit) => (
-                <div key={`${hit.kind}-${hit.tmdbId}`} style={{ ...rowStyle, cursor: "default" }}>
-                  <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {hit.title}
-                    <span style={{ ...metaStyle, marginLeft: 8 }}>
-                      {hit.kind === "tv" ? "Series" : "Film"}
-                      {hit.year ? ` · ${hit.year}` : ""}
+                <div key={`${hit.kind}-${hit.tmdbId}`} style={rowStyle}>
+                  <button
+                    type="button"
+                    onClick={() => openExternal(hit)}
+                    disabled={adding !== null}
+                    className="hover-brand"
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: 0,
+                      border: 0,
+                      background: "transparent",
+                      color: "inherit",
+                      font: "inherit",
+                      textAlign: "left",
+                      cursor: adding === null ? "pointer" : "wait",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {hit.title}
                     </span>
-                  </span>
+                    <span style={metaStyle}>
+                      {adding === hit.tmdbId
+                        ? "Opening…"
+                        : `${hit.kind === "tv" ? "Series" : "Film"}${hit.year ? " · " + hit.year : ""}`}
+                    </span>
+                  </button>
                   <button
                     type="button"
                     onClick={() => {
@@ -205,6 +258,10 @@ export function GlobalSearch() {
                 </div>
               ))}
             </>
+          )}
+
+          {addError && (
+            <p style={{ margin: 0, padding: "8px 10px", fontSize: 12, color: "var(--brand)" }}>{addError}</p>
           )}
 
           {!hasResults && (

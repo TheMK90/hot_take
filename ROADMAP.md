@@ -182,9 +182,11 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 - [x] `@supabase/supabase-js` added, project URL and anon key in `.env.local` (gitignored).
       `lib/supabase.ts` returns null rather than throwing when unconfigured, so the app
       falls back to `lib/data.ts` instead of going down
-- [ ] Persist externally-searched titles: reviewing a TMDb result currently stores only the
-      title string. Insert the title into `titles` (with its tmdb_id) on first review so it
-      gains a real page like the rest of the catalogue
+- [x] Persist externally-searched titles — clicking a TMDb result now POSTs to
+      `/api/titles`, which validates the id against TMDb, writes the row with the
+      service-role client (the anon key cannot write to `titles` by design) and redirects to
+      the page that write created. Verified with Mortal Kombat and The Bear: both got full
+      pages with fanart artwork resolved from their ids
 - [ ] Replace `ThemeUserProvider`'s fake localStorage auth with real Supabase Auth (sign up, log in, log out, session persistence, password reset)
 - [ ] Replace the hardcoded `communityReviews` in `lib/data.ts` with a live query, and make `submitReview` insert into the `reviews` table instead of local state only
 - [ ] Move review votes (DECISIONS §8) into the database — they are per-browser

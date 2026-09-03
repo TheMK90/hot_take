@@ -128,3 +128,106 @@ export async function getShowTvdbId(tmdbId: number): Promise<number | null> {
     return null;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Full details, for adding a title to the catalogue
+// ---------------------------------------------------------------------------
+
+export type TitleDetails = {
+  kind: "movie" | "tv";
+  tmdbId: number;
+  tvdbId: number | null;
+  title: string;
+  genre: string;
+  summary: string;
+  year: number | null;
+  runtimeMin: number | null;
+  director: string | null;
+  releaseDate: string | null;
+  firstAired: number | null;
+  firstAiredDate: string | null;
+  creator: string | null;
+  seasons: number | null;
+  episodes: number | null;
+  network: string | null;
+};
+
+// Only the fields actually read below. TMDb returns far more; typing the whole
+// payload would be noise that goes stale.
+type TmdbDetailPayload = {
+  title?: string;
+  name?: string;
+  overview?: string;
+  genres?: Array<{ name: string }>;
+  release_date?: string;
+  first_air_date?: string;
+  runtime?: number | null;
+  credits?: { crew?: Array<{ job?: string; name?: string }> };
+  external_ids?: { tvdb_id?: number | null };
+  created_by?: Array<{ name?: string }>;
+  number_of_seasons?: number | null;
+  number_of_episodes?: number | null;
+  networks?: Array<{ name?: string }>;
+};
+
+function longDate(iso: string | undefined): string | null {
+  if (!iso) return null;
+  const d = new Date(iso + "T00:00:00Z");
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+}
+
+/**
+ * Everything needed to write one row of `titles`. Returns null if TMDb does not
+ * know the id, which is what stops a bad request creating a junk catalogue entry.
+ */
+export async function getTitleDetails(kind: "movie" | "tv", tmdbId: number): Promise<TitleDetails | null> {
+  const key = apiKey();
+  if (!key) return null;
+
+  try {
+    // append_to_response folds credits and external ids into one request rather
+    // than three.
+    const extra = kind === "movie" ? "credits" : "external_ids";
+    const res = await fetch(`${BASE}/${kind}/${tmdbId}?api_key=${key}&append_to_response=${extra}`, {
+      next: { revalidate: 60 * 60 * 24 },
+    });
+    if (!res.ok) return null;
+
+    const d = (await res.json()) as TmdbDetailPayload;
+    const genre: string = d.genres?.[0]?.name ?? "Drama";
+    const summary: string = d.overview ?? "";
+
+    if (kind === "movie") {
+      const director = d.credits?.crew?.find((c) => c.job === "Director")?.name ?? null;
+      return {
+        kind, tmdbId, tvdbId: null,
+        title: d.title ?? d.name ?? "Untitled",
+        genre, summary,
+        year: yearFrom(d.release_date),
+        runtimeMin: d.runtime ?? null,
+        director,
+        releaseDate: longDate(d.release_date),
+        firstAired: null, firstAiredDate: null, creator: null,
+        seasons: null, episodes: null, network: null,
+      };
+    }
+
+    return {
+      kind, tmdbId,
+      tvdbId: d.external_ids?.tvdb_id ?? null,
+      title: d.name ?? d.title ?? "Untitled",
+      genre, summary,
+      year: null, runtimeMin: null, director: null, releaseDate: null,
+      firstAired: yearFrom(d.first_air_date),
+      firstAiredDate: longDate(d.first_air_date),
+      creator: d.created_by?.[0]?.name ?? null,
+      seasons: d.number_of_seasons ?? null,
+      episodes: d.number_of_episodes ?? null,
+      network: d.networks?.[0]?.name ?? null,
+    };
+  } catch (err) {
+    console.warn(`[tmdb] details ${kind}/${tmdbId} failed:`, err);
+    return null;
+  }
+}

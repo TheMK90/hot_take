@@ -12,6 +12,9 @@ import { similarShows } from "@/lib/data";
 import { getShows, getShow, getReviewsForSlug } from "@/lib/catalogue";
 import { getPoster, getBackdrop, getPosterMap, type ArtLookup } from "@/lib/fanart";
 
+// A title added after the last deploy still gets a page, rendered on demand.
+export const dynamicParams = true;
+
 // Built from the database, so a series added there gets a page without a code change.
 export async function generateStaticParams() {
   return (await getShows()).map((s) => ({ slug: s.slug }));

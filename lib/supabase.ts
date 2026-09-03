@@ -31,6 +31,14 @@ export function getSupabase(): SupabaseClient | null {
   if (!cached) {
     cached = createClient(url, anonKey, {
       auth: { persistSession: false },
+      global: {
+        // Next caches fetches in server components indefinitely by default, which
+        // would pin the catalogue to whatever it looked like at build time.
+        // A short revalidate keeps pages statically generatable at build --
+        // `no-store` makes them dynamic and silently falls back to lib/data.ts --
+        // while still picking up a title added through /api/titles within a minute.
+        fetch: (input, init) => fetch(input, { ...init, next: { revalidate: 30 } }),
+      },
     });
   }
   return cached;
