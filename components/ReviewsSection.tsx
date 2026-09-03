@@ -1,10 +1,10 @@
 "use client";
 
 import { communityReviews } from "@/lib/data";
-import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { Poster } from "@/components/Poster";
 import { useApp } from "@/components/ThemeUserProvider";
 
-export function ReviewsSection() {
+export function ReviewsSection({ stills }: { stills: Record<string, string | null> }) {
   const { myReviews, reviewCountLabel } = useApp();
 
   return (
@@ -75,7 +75,7 @@ export function ReviewsSection() {
             style={{ display: "flex", flexDirection: "column", background: "var(--card)", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden", boxShadow: "var(--shadow)" }}
           >
             <div style={{ position: "relative", height: 180 }}>
-              <PlaceholderImage label={`${rev.film} still`} />
+              <Poster src={stills[rev.slug] ?? null} label={`${rev.film} still`} sizes="(max-width: 900px) 100vw, 420px" />
             </div>
             <div style={{ padding: "20px 22px 22px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>

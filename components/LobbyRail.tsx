@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react";
 import { lobbyMovies } from "@/lib/data";
 import { RateDots } from "@/components/RateDots";
-import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { Poster } from "@/components/Poster";
 
 const MAX_TILT = 34;
 
-export function LobbyRail() {
+export function LobbyRail({ posters }: { posters: Record<string, string | null> }) {
   const railRef = useRef<HTMLDivElement | null>(null);
   const stepRef = useRef<(dir: number) => void>(() => {});
 
@@ -246,7 +246,7 @@ export function LobbyRail() {
           userSelect: "none",
         }}
       >
-        {lobbyMovies.map((m) => (
+        {lobbyMovies.map((m, i) => (
           <article key={m.slug} data-card="1" style={{ flex: "none", width: 330, scrollSnapAlign: "center", transformStyle: "preserve-3d", willChange: "transform" }}>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div style={{ width: 1, height: 34, background: "var(--line)" }} />
@@ -257,7 +257,7 @@ export function LobbyRail() {
               >
                 <div style={{ padding: 10, background: "var(--matte)", borderRadius: 3 }}>
                   <div style={{ position: "relative", width: "100%", aspectRatio: "2 / 3" }}>
-                    <PlaceholderImage label={m.title} />
+                    <Poster src={posters[m.slug] ?? null} label={m.title} sizes="330px" priority={i < 3} />
                   </div>
                 </div>
               </div>
