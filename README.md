@@ -6,6 +6,40 @@
 
 rate it. review it. roast it.
 
+## Getting started
+
+```bash
+npm install
+cp .env.example .env.local   # then paste the fanart.tv key into FANART_API_KEY
+npm run dev                  # http://localhost:3000
+```
+
+The app runs without the key — posters just fall back to placeholder boxes.
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Dev server with hot reload |
+| `npm run build` | Production build, including type and lint checks |
+| `npm start` | Serve the production build |
+| `npm run lint` | ESLint |
+| `npm run render-logos` | Rebuild `assets/logo/png` from the SVG masters |
+
+## Posters
+
+Movie and show artwork comes from [fanart.tv](https://fanart.tv) via
+[`lib/fanart.ts`](lib/fanart.ts). It is **server-only** — artwork is resolved in
+`app/page.tsx` and passed to client components as finished URLs, so the API key never
+reaches the browser. Put the key in `.env.local`, which is gitignored; never commit it.
+
+fanart.tv has no title search, so every catalogue entry in
+[`lib/data.ts`](lib/data.ts) carries the id its artwork is fetched with — `tmdbId` for
+films, `tvdbId` for series. Adding a title means looking its id up first.
+
+## Where things are going
+
+[`ROADMAP.md`](ROADMAP.md) is the launch checklist, phase by phase, with a
+**How to verify** block on each phase.
+
 ## Branding
 
 Logo assets — lockups, marks, and app icons, in SVG and PNG — live in
