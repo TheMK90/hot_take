@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Hot Take app icon, solid rust">
+<title>Hot Take app icon, solid rust</title>
+<rect width="1024" height="1024" rx="229.1" fill="#CE4322"/>
+<g transform="translate(416.19,540.39) scale(7.0968)">
+  <path d="M 2 18 C 18 30, 38 30, 52 19" fill="none" stroke="#FFF6EC" stroke-width="16" stroke-linecap="round"/>
+  <path d="M 2 13 C 18 25, 38 25, 52 14" fill="none" stroke="#CE4322" stroke-width="3.2" stroke-dasharray="3.2 5.8"/>
+  <path d="M 2 23 C 18 35, 38 35, 52 24" fill="none" stroke="#CE4322" stroke-width="3.2" stroke-dasharray="3.2 5.8"/>
+  <path d="M 0 -44 C 8 -26 24 -18 28 -2 C 33 18 19 36 0 36 C -19 36 -33 18 -28 -2 C -25 -14 -14 -22 -12 -34 C -6 -28 -2 -36 0 -44 Z" fill="#FFF6EC"/>
+  <circle cx="-8.5" cy="-20" r="4.5" fill="#2A1C14"/>
+  <circle cx="8.5" cy="-20" r="4.5" fill="#2A1C14"/>
+  <circle cx="-9.8" cy="-21.5" r="1.5" fill="#FFF6EC"/>
+  <circle cx="7.2" cy="-21.5" r="1.5" fill="#FFF6EC"/>
+  <circle cx="0" cy="8" r="19" fill="#CE4322"/>
+  <circle cx="0" cy="8" r="5" fill="#FFF6EC"/>
+  <circle cx="0" cy="-3" r="4.6" fill="#FFF6EC"/>
+  <circle cx="10.5" cy="14.5" r="4.6" fill="#FFF6EC"/>
+  <circle cx="-10.5" cy="14.5" r="4.6" fill="#FFF6EC"/>
+  <circle cx="10.5" cy="1.5" r="4.6" fill="#FFF6EC"/>
+  <circle cx="-10.5" cy="1.5" r="4.6" fill="#FFF6EC"/>
+  <circle cx="0" cy="19" r="4.6" fill="#FFF6EC"/>
+</g>
+</svg>
