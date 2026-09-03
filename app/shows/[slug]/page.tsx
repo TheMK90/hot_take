@@ -6,8 +6,9 @@ import { AuthModal } from "@/components/AuthModal";
 import { ComposerModal } from "@/components/ComposerModal";
 import { ShowHero } from "@/components/ShowHero";
 import { TitleReviews } from "@/components/TitleReviews";
+import { ShowWhereToWatch } from "@/components/ShowWhereToWatch";
 import { SimilarTitles } from "@/components/SimilarTitles";
-import { tvShows, getShowBySlug, similarShows, communityReviews } from "@/lib/data";
+import { tvShows, getShowBySlug, similarShows, showReviews } from "@/lib/data";
 import { getPoster, getBackdrop, getPosterMap, type ArtLookup } from "@/lib/fanart";
 
 export function generateStaticParams() {
@@ -38,10 +39,7 @@ export default async function ShowProfilePage({ params }: { params: { slug: stri
     getPosterMap(relatedLookups),
   ]);
 
-  // The seeded community reviews are all films, so a show currently shows only
-  // the signed-in user's own reviews. That resolves itself in Phase 5 when
-  // reviews come from the database instead of a hardcoded list.
-  const reviewsForShow = communityReviews.filter((r) => r.slug === show.slug);
+  const reviewsForShow = showReviews.filter((r) => r.slug === show.slug);
 
   return (
     <div style={{ position: "relative", minHeight: "100vh", background: "var(--bg)", color: "var(--ink)", overflowX: "hidden" }}>
@@ -53,6 +51,7 @@ export default async function ShowProfilePage({ params }: { params: { slug: stri
         <p style={{ margin: 0, maxWidth: 760, fontSize: 16, lineHeight: 1.65, color: "var(--dim)", textWrap: "pretty" }}>{show.summary}</p>
       </section>
 
+      <ShowWhereToWatch show={show} />
       <TitleReviews title={show.title} reviews={reviewsForShow} />
       <SimilarTitles items={related} posters={relatedPosters} basePath="/shows" heading="More to watch" />
 

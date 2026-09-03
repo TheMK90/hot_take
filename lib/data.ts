@@ -176,6 +176,8 @@ export type Show = {
   creator: string;
   firstAiredDate: string; // human-readable, for the profile page
   summary: string;
+  network: string;
+  episodes: number;
 };
 
 export const tvShows: Show[] = [
@@ -185,6 +187,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "January 20, 2008",
     summary:
       "A high school chemistry teacher diagnosed with terminal cancer starts cooking methamphetamine to provide for his family, and discovers he is far better at it, and far worse a man, than anyone suspected.",
+    network: "AMC",
+    episodes: 62,
   },
   {
     slug: "the-sopranos", title: "The Sopranos", genre: "Drama", firstAired: 1999, seasons: 6, score: 5, tvdbId: 75299,
@@ -192,6 +196,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "January 10, 1999",
     summary:
       "A New Jersey mob boss begins seeing a psychiatrist for panic attacks, and the two halves of his life - the family he kills for and the family he comes home to - refuse to stay apart.",
+    network: "HBO",
+    episodes: 86,
   },
   {
     slug: "the-wire", title: "The Wire", genre: "Crime", firstAired: 2002, seasons: 5, score: 5, tvdbId: 79126,
@@ -199,6 +205,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "June 2, 2002",
     summary:
       "Baltimore seen from every side at once - the corners, the docks, the schools, the newsroom and the police who work them - in a portrait of a city where the institutions fail everyone equally.",
+    network: "HBO",
+    episodes: 60,
   },
   {
     slug: "chernobyl", title: "Chernobyl", genre: "Drama", firstAired: 2019, seasons: 1, score: 5, tvdbId: 360893,
@@ -206,6 +214,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "May 6, 2019",
     summary:
       "The 1986 reactor explosion and the months that followed, told through the people sent to contain it and the cost of the lies told before, during and after.",
+    network: "HBO",
+    episodes: 5,
   },
   {
     slug: "severance", title: "Severance", genre: "Thriller", firstAired: 2022, seasons: 2, score: 4, tvdbId: 371980,
@@ -213,6 +223,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "February 18, 2022",
     summary:
       "Employees at a mysterious corporation undergo a procedure that splits their work memories from their personal ones, until the two selves start trying to reach each other.",
+    network: "Apple TV+",
+    episodes: 19,
   },
   {
     slug: "stranger-things", title: "Stranger Things", genre: "Horror", firstAired: 2016, seasons: 4, score: 4, tvdbId: 305288,
@@ -220,6 +232,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "July 15, 2016",
     summary:
       "When a boy vanishes from a small Indiana town in 1983, his friends uncover a government experiment, a girl with impossible powers, and a door to somewhere that should have stayed shut.",
+    network: "Netflix",
+    episodes: 42,
   },
   {
     slug: "game-of-thrones", title: "Game of Thrones", genre: "Epic", firstAired: 2011, seasons: 8, score: 4, tvdbId: 121361,
@@ -227,6 +241,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "April 17, 2011",
     summary:
       "Noble families wage war for a continent's throne while an older, colder threat gathers beyond the wall in the north, largely ignored by everyone with an army.",
+    network: "HBO",
+    episodes: 73,
   },
   {
     slug: "the-office", title: "The Office (US)", genre: "Comedy", firstAired: 2005, seasons: 9, score: 4, tvdbId: 73244,
@@ -234,6 +250,8 @@ export const tvShows: Show[] = [
     firstAiredDate: "March 24, 2005",
     summary:
       "A documentary crew films the staff of a failing paper company in Scranton, Pennsylvania, and the branch manager who wants, more than anything, to be liked.",
+    network: "NBC",
+    episodes: 201,
   },
 ];
 
@@ -298,6 +316,57 @@ export const communityReviews: CommunityReview[] = [
     byline: "@elliscarr · 5 days ago · 302 helpful",
     upvotes: 302,
     downvotes: 14,
+  },
+];
+
+export const showReviews: CommunityReview[] = [
+  {
+    id: "srev-1",
+    film: "Breaking Bad",
+    slug: "breaking-bad",
+    tag: "Top rated",
+    score: "5 / 5",
+    body: "The rare show where the pilot's promise and the finale's payoff are the same idea, carried the whole way without blinking. Season four is the best stretch of television I have seen.",
+    initials: "JT",
+    byline: "@jotaylor · 1 day ago · 214 helpful",
+    upvotes: 214,
+    downvotes: 11,
+  },
+  {
+    id: "srev-2",
+    film: "Severance",
+    slug: "severance",
+    tag: "Top rated",
+    score: "4.5 / 5",
+    body: "Production design doing an enormous amount of storytelling. Those corridors say more about the company than any line of dialogue does.",
+    initials: "AN",
+    byline: "@anoor · 4 days ago · 97 helpful",
+    upvotes: 97,
+    downvotes: 6,
+  },
+  {
+    id: "srev-3",
+    film: "Game of Thrones",
+    slug: "game-of-thrones",
+    tag: "Mixed",
+    score: "3 / 5",
+    body: "Astonishing for five seasons, then it ran out of book and never found a substitute. Worth watching, worth stopping.",
+    initials: "PK",
+    byline: "@pkendrick · 6 days ago · 158 helpful",
+    upvotes: 158,
+    downvotes: 74,
+  },
+  {
+    id: "srev-4",
+    film: "Chernobyl",
+    slug: "chernobyl",
+    tag: "Top rated",
+    score: "5 / 5",
+    body: "Five episodes, no fat on any of them. It understands that the horror is procedural, not supernatural.",
+    initials: "MS",
+    byline: "@msolberg · 8 days ago · 189 helpful",
+    upvotes: 189,
+    downvotes: 8,
   },
 ];
 

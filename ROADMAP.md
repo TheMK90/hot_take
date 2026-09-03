@@ -140,7 +140,10 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 ## Phase 5 — Supabase: database creation & wiring
 
 - [ ] Create the Supabase project (and a separate one for local/dev if the team wants staging isolation)
-- [ ] Design tables: `profiles` (user handle/initials/avatar), `movies`, `genres`, `reviews` (rating + body + film + user), `cinemas`/`showtimes` (if kept real per Phase 0)
+- [x] Design tables — written as **[supabase/schema.sql](supabase/schema.sql)**, ready to paste
+      into the SQL editor: `profiles`, `titles` (films and series in one table, since search
+      and the genre filter span both), `reviews` and `review_votes`, plus RLS policies and a
+      seed of the current catalogue. Still to run against a real project
 - [ ] Add columns needed for the decade/timeline search: movie `release_year`, indexed for range filtering
 - [ ] Enable Supabase Auth (email/password at minimum; decide if social login is wanted),
       **including anonymous sign-in** — guests can post without an account (DECISIONS §8),
