@@ -1,24 +1,30 @@
 "use client";
 
-import Link from "next/link";
-import { communityReviews } from "@/lib/data";
-import { Poster } from "@/components/Poster";
+import type { CommunityReview, Movie } from "@/lib/data";
 import { useApp } from "@/components/ThemeUserProvider";
+import { WriteReviewButton } from "@/components/WriteReviewButton";
 
-export function ReviewsSection({ stills }: { stills: Record<string, string | null> }) {
-  const { myReviews, reviewCountLabel } = useApp();
+export function MovieReviews({ movie, reviews }: { movie: Movie; reviews: CommunityReview[] }) {
+  const { myReviews } = useApp();
+  const ownReviews = myReviews.filter((r) => r.film === movie.title);
+  const hasAny = ownReviews.length > 0 || reviews.length > 0;
 
   return (
-    <section id="reviews" style={{ position: "relative", zIndex: 2, maxWidth: 1320, margin: "0 auto", padding: "56px 28px 10px" }}>
-      <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 26 }}>
-        <h2 style={{ margin: 0, fontFamily: "var(--font-bodoni), serif", fontSize: 34, fontWeight: 800 }}>Latest from the community</h2>
+    <section id="reviews" style={{ position: "relative", zIndex: 2, maxWidth: 1320, margin: "0 auto", padding: "40px 28px 10px" }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 22 }}>
+        <h2 style={{ margin: 0, fontFamily: "var(--font-bodoni), serif", fontSize: 26, fontWeight: 800 }}>Reviews</h2>
         <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
-        <a href="#reviews" style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", textTransform: "uppercase", letterSpacing: ".16em", fontSize: 12, fontWeight: 700 }}>
-          All {reviewCountLabel} reviews
-        </a>
+        <WriteReviewButton film={movie.title} label="Write a review" />
       </div>
+
+      {!hasAny && (
+        <p style={{ fontSize: 15, color: "var(--dim)", padding: "8px 0 4px" }}>
+          No reviews yet for {movie.title}. Be the first to leave a hot take.
+        </p>
+      )}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 22 }}>
-        {myReviews.map((rev, i) => (
+        {ownReviews.map((rev, i) => (
           <article
             key={i}
             style={{ display: "flex", flexDirection: "column", background: "var(--card)", border: "1px solid var(--brand)", borderRadius: 10, overflow: "hidden", boxShadow: "var(--shadow)" }}
@@ -44,7 +50,6 @@ export function ReviewsSection({ stills }: { stills: Record<string, string | nul
                   {rev.score} / 5
                 </span>
               </div>
-              <h3 style={{ margin: "0 0 8px", fontFamily: "var(--font-bodoni), serif", fontSize: 23, fontWeight: 700 }}>{rev.film}</h3>
               <p style={{ margin: "0 0 16px", fontSize: 15, lineHeight: 1.55, color: "var(--dim)", textWrap: "pretty" }}>{rev.body}</p>
               <div style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-barlow-condensed), sans-serif", textTransform: "uppercase", letterSpacing: ".14em", fontSize: 11, color: "var(--dim)" }}>
                 <span
@@ -70,14 +75,11 @@ export function ReviewsSection({ stills }: { stills: Record<string, string | nul
           </article>
         ))}
 
-        {communityReviews.map((rev) => (
+        {reviews.map((rev) => (
           <article
             key={rev.id}
             style={{ display: "flex", flexDirection: "column", background: "var(--card)", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden", boxShadow: "var(--shadow)" }}
           >
-            <div style={{ position: "relative", height: 180 }}>
-              <Poster src={stills[rev.slug] ?? null} label={`${rev.film} still`} sizes="(max-width: 900px) 100vw, 420px" />
-            </div>
             <div style={{ padding: "20px 22px 22px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                 <span
@@ -113,9 +115,6 @@ export function ReviewsSection({ stills }: { stills: Record<string, string | nul
                   {rev.score}
                 </span>
               </div>
-              <Link href={`/movies/${rev.slug}`} className="hover-brand" style={{ color: "inherit" }}>
-                <h3 style={{ margin: "0 0 8px", fontFamily: "var(--font-bodoni), serif", fontSize: 23, fontWeight: 700 }}>{rev.film}</h3>
-              </Link>
               <p style={{ margin: "0 0 16px", fontSize: 15, lineHeight: 1.55, color: "var(--dim)", textWrap: "pretty" }}>{rev.body}</p>
               <div style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-barlow-condensed), sans-serif", textTransform: "uppercase", letterSpacing: ".14em", fontSize: 11, color: "var(--dim)" }}>
                 <span

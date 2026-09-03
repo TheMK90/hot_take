@@ -36,10 +36,12 @@ type AppState = {
   closeAuth: () => void;
   submitAuth: (name: string, email: string) => void;
   composerOpen: boolean;
-  openComposer: () => void;
+  openComposer: (presetFilm?: string) => void;
   closeComposer: () => void;
   draftScore: number;
   setDraftScore: (n: number) => void;
+  draftFilm: string;
+  setDraftFilm: (film: string) => void;
   submitReview: (film: string, body: string) => void;
   myReviews: MyReview[];
   reviewCountLabel: string;
@@ -65,8 +67,10 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   const [composerOpen, setComposerOpen] = useState(false);
   const [draftScore, setDraftScore] = useState(4);
+  const [draftFilm, setDraftFilm] = useState("");
   const [myReviews, setMyReviews] = useState<MyReview[]>([]);
   const [pendingCompose, setPendingCompose] = useState(false);
+  const [pendingComposeFilm, setPendingComposeFilm] = useState("");
 
   useEffect(() => {
     try {
@@ -130,20 +134,28 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
       };
       persistUser(u);
       setAuthOpen(false);
+      if (pendingCompose) setDraftFilm(pendingComposeFilm);
       setComposerOpen(pendingCompose);
       setPendingCompose(false);
+      setPendingComposeFilm("");
     },
-    [persistUser, pendingCompose]
+    [persistUser, pendingCompose, pendingComposeFilm]
   );
 
-  const openComposer = useCallback(() => {
-    if (user) setComposerOpen(true);
-    else {
-      setPendingCompose(true);
-      setAuthMode("signup");
-      setAuthOpen(true);
-    }
-  }, [user]);
+  const openComposer = useCallback(
+    (presetFilm?: string) => {
+      if (user) {
+        setDraftFilm(presetFilm ?? "");
+        setComposerOpen(true);
+      } else {
+        setPendingCompose(true);
+        setPendingComposeFilm(presetFilm ?? "");
+        setAuthMode("signup");
+        setAuthOpen(true);
+      }
+    },
+    [user]
+  );
   const closeComposer = useCallback(() => setComposerOpen(false), []);
 
   const submitReview = useCallback(
@@ -158,6 +170,7 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
       setMyReviews((rs) => [rev, ...rs]);
       setComposerOpen(false);
       setDraftScore(4);
+      setDraftFilm("");
     },
     [draftScore, user]
   );
@@ -185,6 +198,8 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
     closeComposer,
     draftScore,
     setDraftScore,
+    draftFilm,
+    setDraftFilm,
     submitReview,
     myReviews,
     reviewCountLabel,

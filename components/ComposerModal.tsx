@@ -3,7 +3,7 @@
 import { useApp } from "@/components/ThemeUserProvider";
 
 export function ComposerModal() {
-  const { composerOpen, closeComposer, submitReview, draftScore, setDraftScore, user } = useApp();
+  const { composerOpen, closeComposer, submitReview, draftScore, setDraftScore, draftFilm, setDraftFilm, user } = useApp();
   if (!composerOpen) return null;
 
   return (
@@ -31,7 +31,15 @@ export function ComposerModal() {
           >
             <label style={labelStyle}>
               Film
-              <input name="film" type="text" required placeholder="Salt Flats" style={inputStyle} />
+              <input
+                name="film"
+                type="text"
+                required
+                placeholder="Salt Flats"
+                value={draftFilm}
+                onChange={(e) => setDraftFilm(e.target.value)}
+                style={inputStyle}
+              />
             </label>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <span style={labelStyle}>Your score</span>

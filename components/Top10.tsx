@@ -1,4 +1,5 @@
-import { top10 } from "@/lib/data";
+import Link from "next/link";
+import { top10, lobbyMovies } from "@/lib/data";
 
 export function Top10() {
   return (
@@ -11,15 +12,25 @@ export function Top10() {
         </span>
       </div>
       <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 44px" }}>
-        {top10.map((entry) => (
-          <li key={entry.rank} style={{ display: "flex", alignItems: "center", gap: 18, padding: "15px 0", borderBottom: "1px solid var(--line)" }}>
-            <span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: 28, fontWeight: 900, color: "var(--brand)", minWidth: 44 }}>
-              {String(entry.rank).padStart(2, "0")}
-            </span>
+        {top10.map((entry) => {
+          const movie = lobbyMovies.find((m) => m.title === entry.title);
+          const title = movie ? (
+            <Link href={`/movies/${movie.slug}`} className="hover-brand" style={{ flex: 1, fontSize: 16, fontWeight: 500, color: "inherit" }}>
+              {entry.title}
+            </Link>
+          ) : (
             <span style={{ flex: 1, fontSize: 16, fontWeight: 500 }}>{entry.title}</span>
-            <span style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", letterSpacing: ".12em", fontSize: 13, color: "var(--dim)" }}>{entry.score}</span>
-          </li>
-        ))}
+          );
+          return (
+            <li key={entry.rank} style={{ display: "flex", alignItems: "center", gap: 18, padding: "15px 0", borderBottom: "1px solid var(--line)" }}>
+              <span style={{ fontFamily: "var(--font-bodoni), serif", fontSize: 28, fontWeight: 900, color: "var(--brand)", minWidth: 44 }}>
+                {String(entry.rank).padStart(2, "0")}
+              </span>
+              {title}
+              <span style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", letterSpacing: ".12em", fontSize: 13, color: "var(--dim)" }}>{entry.score}</span>
+            </li>
+          );
+        })}
       </ol>
     </section>
   );
