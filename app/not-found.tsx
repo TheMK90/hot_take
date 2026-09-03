@@ -1,7 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { ChatWidget } from "@/components/ChatWidget";
 
+// notFound() raised from a route segment renders inside Next's error tree,
+// which replaces the root layout's children — anything this page needs has
+// to be declared here rather than inherited from app/layout.tsx.
 export default function NotFound() {
   const router = useRouter();
 
@@ -80,6 +84,8 @@ export default function NotFound() {
           Go back
         </button>
       </div>
+
+      <ChatWidget />
     </div>
   );
 }

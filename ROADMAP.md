@@ -122,7 +122,9 @@ now") instead of crashing the page.
 - [ ] User profile page (handle, avatar, rating history, own reviews)
 - [x] ~~Custom 404 page~~ — `app/not-found.tsx` covers both an unknown route and an
       invalid `/movies/slug` or `/shows/slug`, since Next routes `notFound()` calls
-      there too
+      there too. Themed as a full-bleed gif easter egg rather than the site chrome,
+      with the chat widget mounted directly on the page (layout children don't carry
+      through here)
 - [ ] Real destinations for the footer links (Community rules, Cinemas, Archive currently just anchor back to sections on the homepage)
 - [x] TV show detail pages — `/shows/[slug]`, with `ShowHero` mirroring `MovieHero`.
       The "On the small screen" cards link into them. `MovieReviews` became

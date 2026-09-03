@@ -107,12 +107,41 @@ export async function getShows(): Promise<Show[]> {
   return rows.map(toShow);
 }
 
+/**
+ * A miss in the cached list is checked against the database directly before the
+ * caller gives up. A title added since the list was cached would otherwise 404,
+ * and Next would cache that 404 — which is how a real title ended up
+ * unreachable in production.
+ */
+async function fetchTitleBySlug(slug: string, kind: "movie" | "show"): Promise<TitleRow | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from("titles")
+      .select(TITLE_COLUMNS)
+      .eq("slug", slug)
+      .eq("kind", kind)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data as TitleRow;
+  } catch {
+    return null;
+  }
+}
+
 export async function getMovie(slug: string): Promise<Movie | undefined> {
-  return (await getMovies()).find((m) => m.slug === slug);
+  const fromList = (await getMovies()).find((m) => m.slug === slug);
+  if (fromList) return fromList;
+  const row = await fetchTitleBySlug(slug, "movie");
+  return row ? toMovie(row) : undefined;
 }
 
 export async function getShow(slug: string): Promise<Show | undefined> {
-  return (await getShows()).find((s) => s.slug === slug);
+  const fromList = (await getShows()).find((s) => s.slug === slug);
+  if (fromList) return fromList;
+  const row = await fetchTitleBySlug(slug, "show");
+  return row ? toShow(row) : undefined;
 }
 
 // ---------------------------------------------------------------------------

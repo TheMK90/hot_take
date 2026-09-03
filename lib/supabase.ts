@@ -37,7 +37,12 @@ export function getSupabase(): SupabaseClient | null {
         // A short revalidate keeps pages statically generatable at build --
         // `no-store` makes them dynamic and silently falls back to lib/data.ts --
         // while still picking up a title added through /api/titles within a minute.
-        fetch: (input, init) => fetch(input, { ...init, next: { revalidate: 30 } }),
+        // Tagged so a write can purge them explicitly. Without the tag, adding a
+        // title leaves this fetch holding a list from before the insert, the page
+        // renders notFound(), and that 404 gets cached — which is exactly what
+        // happened in production.
+        fetch: (input, init) =>
+          fetch(input, { ...init, next: { revalidate: 30, tags: ["catalogue"] } }),
       },
     });
   }
