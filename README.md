@@ -21,6 +21,7 @@ palette and guidance on which variant to use at which size.
 | `feature` | General feature work. |
 | `a-h-w-97` | Working branch for [@a-h-w-97](https://github.com/a-h-w-97). |
 | `Axelonfire` | Working branch for [@Axelonfire](https://github.com/Axelonfire). |
+| `y-alireza` | Working branch for [@y-alireza](https://github.com/y-alireza). |
 
 Branch names are flat rather than `feature/<name>`, because a `feature` branch already
 exists and git cannot hold both a `feature` ref and a `feature/…` ref at once.
