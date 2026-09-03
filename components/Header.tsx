@@ -5,7 +5,7 @@ import { Logo } from "@/components/Logo";
 import { useApp } from "@/components/ThemeUserProvider";
 
 export function Header() {
-  const { theme, toggleTheme, user, logout, openLogin, openSignup, openComposer, query, setQuery } = useApp();
+  const { theme, toggleTheme, user, logout, openComposer, query, setQuery } = useApp();
   const dark = theme === "dark";
 
   return (
@@ -169,9 +169,8 @@ export function Header() {
 
           {!user && (
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <button
-                type="button"
-                onClick={openLogin}
+              <Link
+                href="/login"
                 className="hover-brand hover-brand-border"
                 style={{
                   padding: "9px 14px",
@@ -188,10 +187,9 @@ export function Header() {
                 }}
               >
                 Log in
-              </button>
-              <button
-                type="button"
-                onClick={openSignup}
+              </Link>
+              <Link
+                href="/login?mode=signup"
                 className="hover-brighter"
                 style={{
                   padding: "9px 16px",
@@ -208,7 +206,7 @@ export function Header() {
                 }}
               >
                 Sign up
-              </button>
+              </Link>
             </div>
           )}
 

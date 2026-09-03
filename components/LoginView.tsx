@@ -1,28 +1,65 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Logo } from "@/components/Logo";
 import { useApp } from "@/components/ThemeUserProvider";
 
-export function AuthModal() {
-  const { authOpen, authMode, showLogin, showSignup, closeAuth, submitAuth, continueAsGuest } = useApp();
-  if (!authOpen) return null;
+export function LoginView() {
+  const { user, submitAuth, continueAsGuest } = useApp();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [mode, setMode] = useState<"login" | "signup">(searchParams.get("mode") === "signup" ? "signup" : "login");
 
-  const isSignup = authMode === "signup";
+  useEffect(() => {
+    if (user) router.replace("/");
+  }, [user, router]);
+
+  const isSignup = mode === "signup";
 
   return (
     <div
-      onClick={closeAuth}
-      style={{ position: "fixed", inset: 0, zIndex: 90, background: "rgba(20,4,4,.62)", backdropFilter: "blur(6px)", display: "grid", placeItems: "center", padding: 24 }}
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg)",
+        color: "var(--ink)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "48px 24px",
+      }}
     >
+      <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 40 }}>
+        <Logo size={44} />
+        <span
+          style={{
+            fontFamily: "var(--font-bodoni), serif",
+            fontWeight: 900,
+            fontSize: 22,
+            color: "var(--ink)",
+          }}
+        >
+          Hot Take
+        </span>
+      </Link>
+
       <div
-        onClick={(e) => e.stopPropagation()}
-        style={{ width: "100%", maxWidth: 420, background: "var(--card)", border: "1px solid var(--line)", borderRadius: 6, boxShadow: "var(--shadow)", overflow: "hidden" }}
+        style={{
+          width: "100%",
+          maxWidth: 420,
+          background: "var(--card)",
+          border: "1px solid var(--line)",
+          borderRadius: 6,
+          boxShadow: "var(--shadow)",
+          overflow: "hidden",
+        }}
       >
-        <div style={{ height: 10, background: "repeating-linear-gradient(90deg,#a5121c 0 6px,#f6e9dc 6px 12px)" }} />
         <div style={{ padding: "26px 28px 28px" }}>
           <div style={{ display: "flex", gap: 18, marginBottom: 22, borderBottom: "1px solid var(--line)" }}>
             <button
               type="button"
-              onClick={showLogin}
+              onClick={() => setMode("login")}
               style={{
                 padding: "0 0 12px",
                 border: 0,
@@ -42,7 +79,7 @@ export function AuthModal() {
             </button>
             <button
               type="button"
-              onClick={showSignup}
+              onClick={() => setMode("signup")}
               style={{
                 padding: "0 0 12px",
                 border: 0,
@@ -61,11 +98,13 @@ export function AuthModal() {
               Sign up
             </button>
           </div>
-          <h2 style={{ margin: "0 0 6px", fontFamily: "var(--font-bodoni), serif", fontSize: 26, fontWeight: 800 }}>
+          <h1 style={{ margin: "0 0 6px", fontFamily: "var(--font-bodoni), serif", fontSize: 26, fontWeight: 800 }}>
             {isSignup ? "Join Hot Take" : "Welcome back"}
-          </h2>
+          </h1>
           <p style={{ margin: "0 0 20px", fontSize: 14, lineHeight: 1.5, color: "var(--dim)" }}>
-            {isSignup ? "Free account. Rate films, post takes, keep a watch history." : "Log in to keep your takes, or post as a guest without an account."}
+            {isSignup
+              ? "Free account. Rate films, post takes, keep a watch history."
+              : "Log in to keep your takes, or post as a guest without an account."}
           </p>
           <form
             onSubmit={(e) => {
@@ -151,18 +190,14 @@ export function AuthModal() {
           <p style={{ margin: "10px 0 0", fontSize: 12, lineHeight: 1.5, color: "var(--dim)", textAlign: "center" }}>
             No account, no email. Your takes stay on this device and are not tied to you.
           </p>
-
-          <button
-            type="button"
-            onClick={closeAuth}
+          <Link
+            href="/"
             className="hover-brand"
             style={{
+              display: "block",
               marginTop: 16,
-              width: "100%",
-              border: 0,
-              background: "transparent",
+              textAlign: "center",
               color: "var(--dim)",
-              cursor: "pointer",
               fontFamily: "var(--font-barlow-condensed), sans-serif",
               textTransform: "uppercase",
               letterSpacing: ".16em",
@@ -171,7 +206,7 @@ export function AuthModal() {
             }}
           >
             Not now
-          </button>
+          </Link>
         </div>
       </div>
     </div>

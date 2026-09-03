@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AuthModal } from "@/components/AuthModal";
 import { ComposerModal } from "@/components/ComposerModal";
 import { MovieHero } from "@/components/MovieHero";
 import { MovieShowtimes } from "@/components/MovieShowtimes";
@@ -57,7 +56,6 @@ export default async function MovieProfilePage({ params }: { params: { slug: str
       <SimilarTitles items={related} posters={relatedPosters} basePath="/movies" />
 
       <Footer />
-      <AuthModal />
       <ComposerModal />
     </div>
   );

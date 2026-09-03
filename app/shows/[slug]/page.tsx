@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AuthModal } from "@/components/AuthModal";
 import { ComposerModal } from "@/components/ComposerModal";
 import { ShowHero } from "@/components/ShowHero";
 import { TitleReviews } from "@/components/TitleReviews";
@@ -56,7 +55,6 @@ export default async function ShowProfilePage({ params }: { params: { slug: stri
       <SimilarTitles items={related} posters={relatedPosters} basePath="/shows" heading="More to watch" />
 
       <Footer />
-      <AuthModal />
       <ComposerModal />
     </div>
   );
