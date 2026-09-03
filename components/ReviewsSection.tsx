@@ -4,6 +4,7 @@ import Link from "next/link";
 import { communityReviews } from "@/lib/data";
 import { Poster } from "@/components/Poster";
 import { useApp } from "@/components/ThemeUserProvider";
+import { ReviewVote } from "@/components/ReviewVote";
 
 export function ReviewsSection({ stills }: { stills: Record<string, string | null> }) {
   const { myReviews, reviewCountLabel } = useApp();
@@ -65,6 +66,9 @@ export function ReviewsSection({ stills }: { stills: Record<string, string | nul
                   {rev.initials}
                 </span>
                 {rev.byline}
+              </div>
+              <div style={{ marginTop: 14 }}>
+                <ReviewVote reviewId={rev.id} />
               </div>
             </div>
           </article>
@@ -137,6 +141,9 @@ export function ReviewsSection({ stills }: { stills: Record<string, string | nul
                   {rev.initials}
                 </span>
                 {rev.byline}
+              </div>
+              <div style={{ marginTop: 14 }}>
+                <ReviewVote reviewId={rev.id} baseUp={rev.upvotes} baseDown={rev.downvotes} />
               </div>
             </div>
           </article>

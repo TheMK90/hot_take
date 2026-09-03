@@ -258,6 +258,8 @@ export type CommunityReview = {
   body: string;
   initials: string;
   byline: string;
+  upvotes: number;
+  downvotes: number;
 };
 
 export const communityReviews: CommunityReview[] = [
@@ -270,6 +272,8 @@ export const communityReviews: CommunityReview[] = [
     body: "Half the film is a con, half is the bill coming due, and the hinge between them is the best staged sequence in years. The house is the whole argument.",
     initials: "DW",
     byline: "@danaw · 2 days ago · 128 helpful",
+    upvotes: 128,
+    downvotes: 9,
   },
   {
     id: "rev-2",
@@ -280,6 +284,8 @@ export const communityReviews: CommunityReview[] = [
     body: "The docking scene and the water planet are genuinely extraordinary. Every time someone stops to explain the plot out loud, it deflates a little.",
     initials: "RM",
     byline: "@ravi_m · 3 days ago · 64 helpful",
+    upvotes: 64,
+    downvotes: 21,
   },
   {
     id: "rev-3",
@@ -290,6 +296,8 @@ export const communityReviews: CommunityReview[] = [
     body: "Slow in the way weather is slow. See it on the biggest screen you can find and let the sound design do the rest.",
     initials: "EC",
     byline: "@elliscarr · 5 days ago · 302 helpful",
+    upvotes: 302,
+    downvotes: 14,
   },
 ];
 

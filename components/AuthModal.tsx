@@ -3,7 +3,7 @@
 import { useApp } from "@/components/ThemeUserProvider";
 
 export function AuthModal() {
-  const { authOpen, authMode, showLogin, showSignup, closeAuth, submitAuth } = useApp();
+  const { authOpen, authMode, showLogin, showSignup, closeAuth, submitAuth, continueAsGuest } = useApp();
   if (!authOpen) return null;
 
   const isSignup = authMode === "signup";
@@ -65,7 +65,7 @@ export function AuthModal() {
             {isSignup ? "Join Hot Take" : "Welcome back"}
           </h2>
           <p style={{ margin: "0 0 20px", fontSize: 14, lineHeight: 1.5, color: "var(--dim)" }}>
-            {isSignup ? "Free account. Rate films, post takes, keep a watch history." : "Log in to post reviews and vote on other takes."}
+            {isSignup ? "Free account. Rate films, post takes, keep a watch history." : "Log in to keep your takes, or post as a guest without an account."}
           </p>
           <form
             onSubmit={(e) => {
@@ -110,6 +110,48 @@ export function AuthModal() {
               {isSignup ? "Create account" : "Log in"}
             </button>
           </form>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0 16px" }}>
+            <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
+            <span
+              style={{
+                fontFamily: "var(--font-barlow-condensed), sans-serif",
+                textTransform: "uppercase",
+                letterSpacing: ".18em",
+                fontSize: 10,
+                fontWeight: 700,
+                color: "var(--dim)",
+              }}
+            >
+              or
+            </span>
+            <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
+          </div>
+
+          <button
+            type="button"
+            onClick={continueAsGuest}
+            className="hover-brand-border"
+            style={{
+              width: "100%",
+              padding: 13,
+              border: "1px solid var(--line)",
+              borderRadius: 999,
+              background: "var(--card2)",
+              color: "var(--ink)",
+              cursor: "pointer",
+              fontFamily: "var(--font-barlow-condensed), sans-serif",
+              textTransform: "uppercase",
+              letterSpacing: ".18em",
+              fontSize: 13,
+              fontWeight: 700,
+            }}
+          >
+            Post as guest
+          </button>
+          <p style={{ margin: "10px 0 0", fontSize: 12, lineHeight: 1.5, color: "var(--dim)", textAlign: "center" }}>
+            No account, no email. Your takes stay on this device and are not tied to you.
+          </p>
+
           <button
             type="button"
             onClick={closeAuth}

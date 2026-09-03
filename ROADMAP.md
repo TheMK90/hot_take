@@ -142,7 +142,9 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 - [ ] Create the Supabase project (and a separate one for local/dev if the team wants staging isolation)
 - [ ] Design tables: `profiles` (user handle/initials/avatar), `movies`, `genres`, `reviews` (rating + body + film + user), `cinemas`/`showtimes` (if kept real per Phase 0)
 - [ ] Add columns needed for the decade/timeline search: movie `release_year`, indexed for range filtering
-- [ ] Enable Supabase Auth (email/password at minimum; decide if social login is wanted)
+- [ ] Enable Supabase Auth (email/password at minimum; decide if social login is wanted),
+      **including anonymous sign-in** — guests can post without an account (DECISIONS §8),
+      so the RLS ownership rules must work for an author with no account
 - [ ] Write Row Level Security policies: anyone can read movies/reviews; only the authoring user can edit/delete their own review; only admins can add/edit movie entries
 - [ ] Create a Storage bucket for review stills and user avatars, with an upload policy
       (movie/show posters no longer need this — they come from fanart.tv)
@@ -153,6 +155,8 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 - [ ] Add `@supabase/supabase-js` (and `@supabase/ssr` for server components), `.env.local` with the project URL/anon key, keep it out of git
 - [ ] Replace `ThemeUserProvider`'s fake localStorage auth with real Supabase Auth (sign up, log in, log out, session persistence, password reset)
 - [ ] Replace the hardcoded `communityReviews` in `lib/data.ts` with a live query, and make `submitReview` insert into the `reviews` table instead of local state only
+- [ ] Move review votes (DECISIONS §8) into the database — they are per-browser
+      localStorage today, so no two viewers see the same totals
 - [ ] Replace hardcoded `lobbyMovies` / `top10` / `genres` with queries once movies live in the database
 - [x] ~~Replace poster/still `PlaceholderImage` usages with real images~~ — done via
       fanart.tv (`lib/fanart.ts`), not Supabase Storage. `PlaceholderImage` is still the

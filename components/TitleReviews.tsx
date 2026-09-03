@@ -2,6 +2,7 @@
 
 import type { CommunityReview } from "@/lib/data";
 import { useApp } from "@/components/ThemeUserProvider";
+import { ReviewVote } from "@/components/ReviewVote";
 import { WriteReviewButton } from "@/components/WriteReviewButton";
 
 // Works for any titled thing -- films and shows both.
@@ -72,6 +73,9 @@ export function TitleReviews({ title, reviews }: { title: string; reviews: Commu
                 </span>
                 {rev.byline}
               </div>
+              <div style={{ marginTop: 14 }}>
+                <ReviewVote reviewId={rev.id} />
+              </div>
             </div>
           </article>
         ))}
@@ -137,6 +141,9 @@ export function TitleReviews({ title, reviews }: { title: string; reviews: Commu
                   {rev.initials}
                 </span>
                 {rev.byline}
+              </div>
+              <div style={{ marginTop: 14 }}>
+                <ReviewVote reviewId={rev.id} baseUp={rev.upvotes} baseDown={rev.downvotes} />
               </div>
             </div>
           </article>

@@ -10,9 +10,11 @@ export type User = {
   email: string;
   handle: string;
   initials: string;
+  isGuest?: boolean;
 };
 
 export type MyReview = {
+  id: string;
   film: string;
   body: string;
   score: number;
@@ -36,6 +38,7 @@ type AppState = {
   showSignup: () => void;
   closeAuth: () => void;
   submitAuth: (name: string, email: string) => void;
+  continueAsGuest: () => void;
   composerOpen: boolean;
   openComposer: (presetFilm?: string) => void;
   closeComposer: () => void;
@@ -55,7 +58,12 @@ type AppState = {
   toggleGenre: (g: string) => void;
   clearFilters: () => void;
   filtering: boolean;
+  // Thumbs up/down on individual reviews. One vote per review per browser.
+  reviewVotes: Record<string, Vote>;
+  voteReview: (reviewId: string, vote: Vote) => void;
 };
+
+export type Vote = "up" | "down" | null;
 
 const AppContext = createContext<AppState | null>(null);
 
@@ -83,6 +91,7 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
   const [query, setQuery] = useState("");
   const [genre, setGenre] = useState<string | null>(null);
   const [pendingComposeFilm, setPendingComposeFilm] = useState("");
+  const [reviewVotes, setReviewVotes] = useState<Record<string, Vote>>({});
 
   useEffect(() => {
     try {
@@ -92,6 +101,8 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
       if (storedUser) setUser(storedUser);
       const storedReviews = JSON.parse(localStorage.getItem("hottake-reviews") || "[]");
       if (Array.isArray(storedReviews)) setMyReviews(storedReviews);
+      const storedVotes = JSON.parse(localStorage.getItem("hottake-votes") || "{}");
+      if (storedVotes && typeof storedVotes === "object") setReviewVotes(storedVotes);
     } catch {
       // ignore unavailable storage
     }
@@ -116,6 +127,14 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
       // ignore unavailable storage
     }
   }, [myReviews]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("hottake-votes", JSON.stringify(reviewVotes));
+    } catch {
+      // ignore unavailable storage
+    }
+  }, [reviewVotes]);
 
   const toggleTheme = useCallback(() => {
     setTheme((t) => (t === "dark" ? "light" : "dark"));
@@ -166,6 +185,26 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
     [persistUser, pendingCompose, pendingComposeFilm]
   );
 
+  // Guests can post without an account. The handle carries a random suffix so two
+  // guests in a thread are still tellable apart, and isGuest lets the UI say what
+  // a guest does not get: nothing is tied to them once storage is cleared.
+  const continueAsGuest = useCallback(() => {
+    const suffix = Math.random().toString(36).slice(2, 6);
+    const u: User = {
+      name: "Guest",
+      email: "",
+      handle: `@guest-${suffix}`,
+      initials: "G",
+      isGuest: true,
+    };
+    persistUser(u);
+    setAuthOpen(false);
+    if (pendingCompose) setDraftFilm(pendingComposeFilm);
+    setComposerOpen(pendingCompose);
+    setPendingCompose(false);
+    setPendingComposeFilm("");
+  }, [persistUser, pendingCompose, pendingComposeFilm]);
+
   const openComposer = useCallback(
     (presetFilm?: string) => {
       if (user) {
@@ -185,6 +224,7 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
   const submitReview = useCallback(
     (film: string, body: string) => {
       const rev: MyReview = {
+        id: `my-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
         film,
         body,
         score: draftScore,
@@ -199,6 +239,17 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
     },
     [draftScore, user]
   );
+
+  // Clicking the same thumb again clears the vote, which is what people expect
+  // from a toggle and gives them a way to undo a misclick.
+  const voteReview = useCallback((reviewId: string, vote: Vote) => {
+    setReviewVotes((cur) => {
+      const next = { ...cur };
+      if (cur[reviewId] === vote || vote === null) delete next[reviewId];
+      else next[reviewId] = vote;
+      return next;
+    });
+  }, []);
 
   const toggleGenre = useCallback(
     (g: string) => setGenre((cur) => (cur === g ? null : g)),
@@ -230,6 +281,7 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
     showSignup,
     closeAuth,
     submitAuth,
+    continueAsGuest,
     composerOpen,
     openComposer,
     closeComposer,
@@ -247,6 +299,8 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
     toggleGenre,
     clearFilters,
     filtering,
+    reviewVotes,
+    voteReview,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

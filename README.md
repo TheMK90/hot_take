@@ -32,6 +32,11 @@ against the same `.next` directory at once, or a running server held files open 
 something tried to delete them — Windows will not remove a locked file, so you end up with
 a build that is missing chunks.
 
+The same cure applies to **`Failed to read source code from .../SomeFile.tsx`** naming a
+file that no longer exists. A running dev server keeps its own module graph, so when a file
+is renamed underneath it — by an edit, a branch switch or a `git pull` — it keeps asking for
+the old path. Restart it.
+
 Stop every running dev/build process first, then:
 
 ```bash

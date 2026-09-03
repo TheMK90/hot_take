@@ -180,3 +180,36 @@ Open questions to settle before building it — none blocking v1:
   something honest, not an empty box
 
 Until then the section stays visibly decorative. It must not imply bookable screenings.
+
+---
+
+## 8. Guest posting and review voting
+
+Added after the original seven, on request.
+
+### Anyone can post without an account
+
+Requiring sign-up before a first review is the single biggest thing standing between a
+visitor and the point of the site. "Post as guest" in the auth modal creates a session
+with no email and no password, and a guest can rate and review exactly like a signed-in
+user.
+
+A guest handle carries a random suffix (`@guest-4f2a`) so two guests in the same thread
+are still tellable apart, and the user record is flagged `isGuest` so the interface can be
+honest about the trade: a guest's takes live in that browser only and are not recoverable.
+Signing up is what makes them yours and portable.
+
+**This has a Phase 5 consequence.** Supabase auth and the RLS policies must account for
+guests, not just registered users — anonymous sign-in, and an ownership rule that still
+works when the author has no account. Deciding that late would mean either dropping guest
+posting or reworking the policies.
+
+### Reviews can be voted up or down
+
+Thumbs up/down on each review, one vote per review per browser. Clicking the active thumb
+again clears the vote, so a misclick is undoable.
+
+The displayed count is the seeded total plus the viewer's own vote, so the number reacts
+immediately instead of appearing stuck. Real aggregate counts need the database and arrive
+in Phase 5 — until then the votes are local to the browser and are not shared between
+viewers.
