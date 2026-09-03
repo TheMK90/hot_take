@@ -34,7 +34,8 @@ you should see if the phase is genuinely done.
 - [ ] Design the multi-layer score badge: an Oscars/Razzies-style icon overlay on top/bottom rated films (Rotten-Tomatoes-icon equivalent) — what score thresholds trigger which badge
 - [ ] Decide what "easter eggs" means concretely (a few specific hidden interactions to build, not just the idea)
 - [ ] Decide what "recap" means (per-user "your year in film" style recap? site-wide annual recap?)
-- [ ] Confirm "Related movies" stays cut (crossed out in the notes) so it's not accidentally scoped back in
+- [x] ~~Confirm "Related movies" stays cut~~ — reversed: explicitly requested for the movie
+      profile page, see Phase 2
 - [ ] Decide: is "Now showing" / cinema showtimes real data going forward, or does it stay a static decorative section?
 
 **How to verify Phase 0:** nothing to run — every box above is a written decision.
@@ -60,10 +61,17 @@ changes; sign in, rate a film, reload the page and confirm the rating survived.
 
 ## Phase 2 — Supporting pages the above needs
 
-- [ ] Per-movie detail page (currently posters/titles don't link anywhere — needed for search results, genre browsing, and "your rating history" to have somewhere to point to)
+- [x] ~~Per-movie detail page~~ — `/movies/[slug]`: poster, summary, director, release
+      date, runtime, score, showtimes (or a fallback message), reviews for that title
+      (community + the viewer's own), a "write a review" CTA prefilled with the film,
+      and a "you might also like" rail (same genre, backfilled with the rest of the
+      catalogue so a one-of-a-kind genre still gets suggestions). Lobby posters,
+      review card titles, and Top 10 entries all link there now.
 - [ ] User profile page (handle, avatar, rating history, own reviews)
-- [ ] 404 page
+- [ ] Custom 404 page (an invalid `/movies/slug` currently falls through to Next's
+      stock "This page could not be found", not a themed one)
 - [ ] Real destinations for the footer links (Community rules, Cinemas, Archive currently just anchor back to sections on the homepage)
+- [ ] TV show detail pages — shows still have no equivalent of the movie profile page
 
 **How to verify Phase 2:** `npm run dev`, then click a poster — it should open that
 film's page rather than doing nothing. Visit `/some-nonsense-url` and confirm you get
