@@ -1,8 +1,19 @@
-import { tvShows } from "@/lib/data";
-import { RateDots } from "@/components/RateDots";
+"use client";
+
+import { filterShows } from "@/lib/data";
+import { HeatScale } from "@/components/HeatScale";
 import { Poster } from "@/components/Poster";
+import { useApp } from "@/components/ThemeUserProvider";
 
 export function TvRail({ posters }: { posters: Record<string, string | null> }) {
+  const { query, genre, filtering } = useApp();
+  const shows = filterShows(query, genre);
+
+  // With a filter on and nothing matching, drop the section entirely rather than
+  // showing an empty grid under a heading -- the lobby rail above already
+  // explains that nothing matched.
+  if (filtering && shows.length === 0) return null;
+
   return (
     <section id="shows" style={{ position: "relative", zIndex: 2, maxWidth: 1320, margin: "0 auto", padding: "56px 28px 0" }}>
       <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 22 }}>
@@ -17,7 +28,7 @@ export function TvRail({ posters }: { posters: Record<string, string | null> }) 
             color: "var(--dim)",
           }}
         >
-          Series worth the weekend
+          {filtering ? shows.length + " series" : "Series worth the weekend"}
         </span>
       </div>
 
@@ -31,7 +42,7 @@ export function TvRail({ posters }: { posters: Record<string, string | null> }) 
           gap: 30,
         }}
       >
-        {tvShows.map((s) => (
+        {shows.map((s) => (
           <li key={s.slug}>
             <div
               style={{
@@ -65,7 +76,7 @@ export function TvRail({ posters }: { posters: Record<string, string | null> }) 
               >
                 {s.genre} · {s.firstAired} · {s.seasons} {s.seasons === 1 ? "season" : "seasons"}
               </p>
-              <RateDots score={s.score} />
+              <HeatScale score={s.score} />
             </div>
           </li>
         ))}

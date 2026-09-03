@@ -6,6 +6,7 @@ import { TvRail } from "@/components/TvRail";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { NowShowing } from "@/components/NowShowing";
 import { Top10 } from "@/components/Top10";
+import { MyRatings } from "@/components/MyRatings";
 import { Genres } from "@/components/Genres";
 import { Footer } from "@/components/Footer";
 import { AuthModal } from "@/components/AuthModal";
@@ -46,6 +47,7 @@ export default async function Home() {
       <ReviewsSection stills={reviewStills} />
       <NowShowing />
       <TvRail posters={showPosters} />
+      <MyRatings />
       <Top10 />
       <Genres />
       <Footer />

@@ -18,6 +18,7 @@ export type MyReview = {
   score: number;
   initials: string;
   byline: string;
+  ratedAt: number;
 };
 
 type AuthMode = "login" | "signup";
@@ -43,6 +44,15 @@ type AppState = {
   submitReview: (film: string, body: string) => void;
   myReviews: MyReview[];
   reviewCountLabel: string;
+  // Catalogue filtering, shared by the header search box, the genre tiles and
+  // both rails.
+  query: string;
+  setQuery: (q: string) => void;
+  genre: string | null;
+  setGenre: (g: string | null) => void;
+  toggleGenre: (g: string) => void;
+  clearFilters: () => void;
+  filtering: boolean;
 };
 
 const AppContext = createContext<AppState | null>(null);
@@ -67,6 +77,8 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
   const [draftScore, setDraftScore] = useState(4);
   const [myReviews, setMyReviews] = useState<MyReview[]>([]);
   const [pendingCompose, setPendingCompose] = useState(false);
+  const [query, setQuery] = useState("");
+  const [genre, setGenre] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -74,6 +86,8 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
       if (storedTheme === "light" || storedTheme === "dark") setTheme(storedTheme);
       const storedUser = JSON.parse(localStorage.getItem("hottake-user") || "null");
       if (storedUser) setUser(storedUser);
+      const storedReviews = JSON.parse(localStorage.getItem("hottake-reviews") || "[]");
+      if (Array.isArray(storedReviews)) setMyReviews(storedReviews);
     } catch {
       // ignore unavailable storage
     }
@@ -88,6 +102,16 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
       // ignore unavailable storage
     }
   }, [theme]);
+
+  // Rating history has to survive a reload, or "your ratings" is a lie the
+  // moment anyone refreshes.
+  useEffect(() => {
+    try {
+      localStorage.setItem("hottake-reviews", JSON.stringify(myReviews));
+    } catch {
+      // ignore unavailable storage
+    }
+  }, [myReviews]);
 
   const toggleTheme = useCallback(() => {
     setTheme((t) => (t === "dark" ? "light" : "dark"));
@@ -154,6 +178,7 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
         score: draftScore,
         initials: user?.initials || "HT",
         byline: (user?.handle || "@you") + " · just now",
+        ratedAt: Date.now(),
       };
       setMyReviews((rs) => [rev, ...rs]);
       setComposerOpen(false);
@@ -161,6 +186,18 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
     },
     [draftScore, user]
   );
+
+  const toggleGenre = useCallback(
+    (g: string) => setGenre((cur) => (cur === g ? null : g)),
+    []
+  );
+
+  const clearFilters = useCallback(() => {
+    setQuery("");
+    setGenre(null);
+  }, []);
+
+  const filtering = query.trim().length > 0 || genre !== null;
 
   const reviewCountLabel = useMemo(
     () => (BASE_REVIEW_COUNT + myReviews.length).toLocaleString("en-US"),
@@ -188,6 +225,13 @@ export function ThemeUserProvider({ children }: { children: React.ReactNode }) {
     submitReview,
     myReviews,
     reviewCountLabel,
+    query,
+    setQuery,
+    genre,
+    setGenre,
+    toggleGenre,
+    clearFilters,
+    filtering,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

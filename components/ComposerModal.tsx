@@ -1,6 +1,7 @@
 "use client";
 
 import { useApp } from "@/components/ThemeUserProvider";
+import { HeatScaleInput } from "@/components/HeatScale";
 
 export function ComposerModal() {
   const { composerOpen, closeComposer, submitReview, draftScore, setDraftScore, user } = useApp();
@@ -31,40 +32,11 @@ export function ComposerModal() {
           >
             <label style={labelStyle}>
               Film
-              <input name="film" type="text" required placeholder="Salt Flats" style={inputStyle} />
+              <input name="film" type="text" required placeholder="Parasite" style={inputStyle} />
             </label>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <span style={labelStyle}>Your score</span>
-              <div style={{ display: "flex", gap: 8 }}>
-                {[1, 2, 3, 4, 5].map((n) => {
-                  const active = n <= draftScore;
-                  return (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setDraftScore(n)}
-                      aria-label={`${n} out of 5`}
-                      style={{
-                        width: 38,
-                        height: 38,
-                        display: "grid",
-                        placeItems: "center",
-                        border: "1px solid var(--line)",
-                        borderRadius: "50%",
-                        background: active ? "var(--brand)" : "transparent",
-                        cursor: "pointer",
-                        color: active ? "var(--onbrand)" : "var(--rateoff)",
-                      }}
-                    >
-                      <svg width="18" height="18" viewBox="0 0 24 24">
-                        <circle cx="8" cy="9" r="5" fill="currentColor" />
-                        <circle cx="16" cy="8" r="4.4" fill="currentColor" />
-                        <circle cx="12" cy="15" r="5.6" fill="currentColor" />
-                      </svg>
-                    </button>
-                  );
-                })}
-              </div>
+              <HeatScaleInput value={draftScore} onChange={setDraftScore} />
             </div>
             <label style={labelStyle}>
               Your take
@@ -72,7 +44,7 @@ export function ComposerModal() {
                 name="body"
                 required
                 rows={4}
-                placeholder="Two hours of people not saying the thing, and it earns every silence."
+                placeholder="Half the film is a con, half is the bill coming due."
                 style={{ ...inputStyle, lineHeight: 1.5, resize: "vertical" }}
               />
             </label>

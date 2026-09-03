@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 import { useApp } from "@/components/ThemeUserProvider";
 
 export function Header() {
-  const { theme, toggleTheme, user, logout, openLogin, openSignup, openComposer } = useApp();
+  const { theme, toggleTheme, user, logout, openLogin, openSignup, openComposer, query, setQuery } = useApp();
   const dark = theme === "dark";
 
   return (
@@ -109,8 +109,11 @@ export function Header() {
               <path d="M16.5 16.5 21 21" />
             </svg>
             <input
-              type="text"
-              placeholder="Search films, reviewers"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search films and shows"
+              aria-label="Search films and shows"
               style={{
                 border: 0,
                 outline: 0,

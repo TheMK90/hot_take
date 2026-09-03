@@ -52,19 +52,25 @@ All seven answered in **[DECISIONS.md](DECISIONS.md)** — read that, not this s
 can answer "what are we building?" from it without asking anyone. If a decision there turns
 out wrong, change it in DECISIONS.md first and let this roadmap follow.
 
-## Phase 1 — v1 features (built against mock data)
+## Phase 1 — v1 features (built against mock data) ✅ DONE
 
 Scoped down to the lean launch agreed in [DECISIONS.md](DECISIONS.md) §1. Everything
 deferred is listed under "After v1" below — it is not dropped, just not blocking launch.
 
-- [ ] Search bar: make it functional (search by film name) over `lib/data.ts` — the input
-      at `components/Header.tsx` already exists but has no handler
-- [ ] Browse/filter by category (genre) — the "Browse by genre" tiles are currently
-      `href="#genres"` anchors that scroll instead of filtering
-- [ ] Heat-scale rating input (DECISIONS §2): one component, `readonly` mode replaces
-      `RateDots` for display, interactive mode is the input. Build it as a real
-      `radiogroup` from the start — retrofitting keyboard support is worse than doing it now
-- [ ] Rating history — a signed-in user's past ratings/reviews, from local state for now
+- [x] Search bar: functional over `lib/data.ts`, case-insensitive, filtering films and
+      shows together. Filter state lives in `ThemeUserProvider` so the header, the genre
+      tiles and both rails share one source of truth
+- [x] Browse/filter by genre — the tiles are now toggle buttons carrying `aria-pressed`.
+      Genre counts are derived from the catalogue instead of hardcoded, so a tile can no
+      longer promise 27 documentaries and filter down to nothing
+- [x] Heat-scale rating input (DECISIONS §2) — `components/HeatScale.tsx`. `HeatScale` is
+      the display mode and replaced `RateDots` everywhere; `HeatScaleInput` is the input,
+      built from native radios in a `radiogroup` so arrow keys, tab order and
+      announcement come from the platform rather than hand-rolled key handlers. The flame
+      is the logo's own drop path, so the rating and the mark are literally one shape
+- [x] Rating history — `components/MyRatings.tsx`, shown only when signed in. Reviews now
+      persist to `localStorage` and carry a `ratedAt` timestamp, so a rating survives a
+      reload. Moves to a real query in Phase 5; the profile page it belongs on is Phase 2
 
 ### After v1 — not blocking launch
 

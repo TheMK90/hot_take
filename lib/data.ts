@@ -9,7 +9,7 @@ export type Movie = {
   genre: string;
   year: number;
   runtimeMin: number;
-  score: number; // out of 5, in whole steps (RateDots fills i < score)
+  score: number; // out of 5, in whole steps (HeatScale fills i < score)
   tmdbId: number;
 };
 
@@ -122,13 +122,36 @@ export const top10: Top10Entry[] = [
 
 export type Genre = { name: string; count: number };
 
-export const genres: Genre[] = [
-  { name: "Drama", count: 38 },
-  { name: "Thriller", count: 24 },
-  { name: "Comedy", count: 19 },
-  { name: "Horror", count: 15 },
-  { name: "Documentary", count: 27 },
-  { name: "Classics", count: 11 },
-];
+// Derived from the catalogue rather than hardcoded. The counts have to be real
+// now that the tiles actually filter -- a "Documentary (27)" tile that filters
+// down to nothing is worse than no tile at all.
+function buildGenres(): Genre[] {
+  const counts = new Map<string, number>();
+  for (const m of lobbyMovies) counts.set(m.genre, (counts.get(m.genre) ?? 0) + 1);
+  for (const s of tvShows) counts.set(s.genre, (counts.get(s.genre) ?? 0) + 1);
+  return [...counts.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+export const genres: Genre[] = buildGenres();
+
+/** Case-insensitive substring match on the title. */
+export function matchesQuery(title: string, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  return q.length === 0 || title.toLowerCase().includes(q);
+}
+
+export function filterMovies(query: string, genre: string | null): Movie[] {
+  return lobbyMovies.filter(
+    (m) => matchesQuery(m.title, query) && (genre === null || m.genre === genre)
+  );
+}
+
+export function filterShows(query: string, genre: string | null): Show[] {
+  return tvShows.filter(
+    (s) => matchesQuery(s.title, query) && (genre === null || s.genre === genre)
+  );
+}
 
 export const BASE_REVIEW_COUNT = 12480;

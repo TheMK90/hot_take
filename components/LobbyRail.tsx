@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { lobbyMovies } from "@/lib/data";
-import { RateDots } from "@/components/RateDots";
+import { filterMovies } from "@/lib/data";
+import { HeatScale } from "@/components/HeatScale";
+import { useApp } from "@/components/ThemeUserProvider";
 import { Poster } from "@/components/Poster";
 
 const MAX_TILT = 34;
 
 export function LobbyRail({ posters }: { posters: Record<string, string | null> }) {
+  const { query, genre, filtering, clearFilters } = useApp();
+  const movies = filterMovies(query, genre);
   const railRef = useRef<HTMLDivElement | null>(null);
   const stepRef = useRef<(dir: number) => void>(() => {});
 
@@ -195,7 +198,7 @@ export function LobbyRail({ posters }: { posters: Record<string, string | null> 
       if (inertia) cancelAnimationFrame(inertia);
       cancelAnimationFrame(initId);
     };
-  }, []);
+  }, [movies.length]);
 
   return (
     <section style={{ position: "relative", zIndex: 2, padding: "26px 0 10px" }}>
@@ -204,6 +207,40 @@ export function LobbyRail({ posters }: { posters: Record<string, string | null> 
           In the lobby
         </h2>
         <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
+        {filtering && (
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginRight: 4 }}>
+            <span
+              aria-live="polite"
+              style={{
+                fontFamily: "var(--font-barlow-condensed), sans-serif",
+                textTransform: "uppercase",
+                letterSpacing: ".16em",
+                fontSize: 12,
+                color: "var(--dim)",
+              }}
+            >
+              {movies.length} {movies.length === 1 ? "film" : "films"}
+              {genre ? " in " + genre : ""}
+            </span>
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="hover-brand-border"
+              style={{
+                padding: "6px 12px",
+                borderRadius: 999,
+                border: "1px solid var(--line)",
+                background: "var(--card)",
+                color: "var(--ink)",
+                font: "inherit",
+                fontSize: 12,
+                cursor: "pointer",
+              }}
+            >
+              Clear
+            </button>
+          </div>
+        )}
         <div style={{ display: "flex", gap: 8 }}>
           <button
             type="button"
@@ -230,6 +267,42 @@ export function LobbyRail({ posters }: { posters: Record<string, string | null> 
         </div>
       </div>
 
+      {movies.length === 0 ? (
+        <div
+          style={{
+            margin: "34px 0 66px",
+            padding: "54px 28px",
+            textAlign: "center",
+            border: "1px dashed var(--line)",
+            borderRadius: 10,
+            background: "var(--card2)",
+          }}
+        >
+          <p style={{ margin: "0 0 6px", fontFamily: "var(--font-bodoni), serif", fontSize: 24, fontWeight: 700 }}>
+            Nothing playing here
+          </p>
+          <p style={{ margin: "0 0 18px", fontSize: 14, color: "var(--dim)" }}>
+            No films match{query.trim() ? ' "' + query.trim() + '"' : ""}
+            {genre ? " in " + genre : ""}.
+          </p>
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="hover-fill-brand"
+            style={{
+              padding: "9px 18px",
+              borderRadius: 999,
+              border: "1px solid var(--line)",
+              background: "var(--card)",
+              color: "var(--ink)",
+              font: "inherit",
+              cursor: "pointer",
+            }}
+          >
+            Clear filters
+          </button>
+        </div>
+      ) : (
       <div
         data-rail="1"
         ref={railRef}
@@ -246,7 +319,7 @@ export function LobbyRail({ posters }: { posters: Record<string, string | null> 
           userSelect: "none",
         }}
       >
-        {lobbyMovies.map((m, i) => (
+        {movies.map((m, i) => (
           <article key={m.slug} data-card="1" style={{ flex: "none", width: 330, scrollSnapAlign: "center", transformStyle: "preserve-3d", willChange: "transform" }}>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div style={{ width: 1, height: 34, background: "var(--line)" }} />
@@ -266,12 +339,13 @@ export function LobbyRail({ posters }: { posters: Record<string, string | null> 
                 <p style={{ margin: "6px 0 10px", fontFamily: "var(--font-barlow-condensed), sans-serif", textTransform: "uppercase", letterSpacing: ".16em", fontSize: 11, color: "var(--dim)" }}>
                   {m.genre} · {m.year} · {m.runtimeMin} min
                 </p>
-                <RateDots score={m.score} />
+                <HeatScale score={m.score} />
               </div>
             </div>
           </article>
         ))}
       </div>
+      )}
     </section>
   );
 }
