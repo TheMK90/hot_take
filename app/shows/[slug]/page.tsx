@@ -7,15 +7,20 @@ import { ShowHero } from "@/components/ShowHero";
 import { TitleReviews } from "@/components/TitleReviews";
 import { ShowWhereToWatch } from "@/components/ShowWhereToWatch";
 import { SimilarTitles } from "@/components/SimilarTitles";
-import { tvShows, getShowBySlug, similarShows, showReviews } from "@/lib/data";
+import { similarShows } from "@/lib/data";
+import { getShows, getShow, getReviewsForSlug } from "@/lib/catalogue";
 import { getPoster, getBackdrop, getPosterMap, type ArtLookup } from "@/lib/fanart";
 
-export function generateStaticParams() {
-  return tvShows.map((s) => ({ slug: s.slug }));
+// A title added after the last deploy still gets a page, rendered on demand.
+export const dynamicParams = true;
+
+// Built from the database, so a series added there gets a page without a code change.
+export async function generateStaticParams() {
+  return (await getShows()).map((s) => ({ slug: s.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const show = getShowBySlug(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const show = await getShow(params.slug);
   if (!show) return { title: "Show not found — Hot Take" };
   return {
     title: `${show.title} (${show.firstAired}) — Hot Take`,
@@ -24,10 +29,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 }
 
 export default async function ShowProfilePage({ params }: { params: { slug: string } }) {
-  const show = getShowBySlug(params.slug);
+  const show = await getShow(params.slug);
   if (!show) notFound();
 
-  const related = similarShows(show, 4);
+  const allShows = await getShows();
+  const related = similarShows(show, 4, allShows);
   const relatedLookups: Record<string, ArtLookup> = Object.fromEntries(
     related.map((s) => [s.slug, { kind: "tv" as const, id: s.tvdbId }])
   );
@@ -38,7 +44,7 @@ export default async function ShowProfilePage({ params }: { params: { slug: stri
     getPosterMap(relatedLookups),
   ]);
 
-  const reviewsForShow = showReviews.filter((r) => r.slug === show.slug);
+  const reviewsForShow = await getReviewsForSlug(show.slug);
 
   return (
     <div style={{ position: "relative", minHeight: "100vh", background: "var(--bg)", color: "var(--ink)", overflowX: "hidden" }}>

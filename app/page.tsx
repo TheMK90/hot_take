@@ -10,13 +10,17 @@ import { MyRatings } from "@/components/MyRatings";
 import { Genres } from "@/components/Genres";
 import { Footer } from "@/components/Footer";
 import { ComposerModal } from "@/components/ComposerModal";
-import { lobbyMovies, tvShows, communityReviews } from "@/lib/data";
+import { ChatWidget } from "@/components/ChatWidget";
+import { communityReviews, buildGenres } from "@/lib/data";
+import { getMovies, getShows } from "@/lib/catalogue";
 import { getPosterMap, getBackdropMap, type ArtLookup } from "@/lib/fanart";
 
 // This page is a server component so the fanart.tv key stays on the server:
 // artwork is resolved here and only finished image URLs are handed to the
 // client components below.
 export default async function Home() {
+  const [lobbyMovies, tvShows] = await Promise.all([getMovies(), getShows()]);
+
   const movieLookups: Record<string, ArtLookup> = Object.fromEntries(
     lobbyMovies.map((m) => [m.slug, { kind: "movie" as const, id: m.tmdbId }])
   );
@@ -42,15 +46,16 @@ export default async function Home() {
       <MarqueeBackdrop />
       <Header />
       <Hero />
-      <LobbyRail posters={moviePosters} />
+      <LobbyRail posters={moviePosters} catalogue={lobbyMovies} />
       <ReviewsSection stills={reviewStills} />
       <NowShowing />
-      <TvRail posters={showPosters} />
+      <TvRail posters={showPosters} catalogue={tvShows} />
       <MyRatings />
       <Top10 />
-      <Genres />
+      <Genres genres={buildGenres(lobbyMovies, tvShows)} />
       <Footer />
       <ComposerModal />
+      <ChatWidget />
     </div>
   );
 }

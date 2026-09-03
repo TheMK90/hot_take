@@ -2,16 +2,16 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { filterMovies } from "@/lib/data";
+import { filterMovies, type Movie } from "@/lib/data";
 import { HeatScale } from "@/components/HeatScale";
 import { useApp } from "@/components/ThemeUserProvider";
 import { Poster } from "@/components/Poster";
 
 const MAX_TILT = 34;
 
-export function LobbyRail({ posters }: { posters: Record<string, string | null> }) {
+export function LobbyRail({ posters, catalogue }: { posters: Record<string, string | null>; catalogue: Movie[] }) {
   const { query, genre, filtering, clearFilters } = useApp();
-  const movies = filterMovies(query, genre);
+  const movies = filterMovies(query, genre, catalogue);
   const railRef = useRef<HTMLDivElement | null>(null);
   const stepRef = useRef<(dir: number) => void>(() => {});
 

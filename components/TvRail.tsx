@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { filterShows } from "@/lib/data";
+import { filterShows, type Show } from "@/lib/data";
 import { HeatScale } from "@/components/HeatScale";
 import { Poster } from "@/components/Poster";
 import { useApp } from "@/components/ThemeUserProvider";
 
-export function TvRail({ posters }: { posters: Record<string, string | null> }) {
+export function TvRail({ posters, catalogue }: { posters: Record<string, string | null>; catalogue: Show[] }) {
   const { query, genre, filtering } = useApp();
-  const shows = filterShows(query, genre);
+  const shows = filterShows(query, genre, catalogue);
 
   // With a filter on and nothing matching, drop the section entirely rather than
   // showing an empty grid under a heading -- the lobby rail above already

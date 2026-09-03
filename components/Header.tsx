@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { useApp } from "@/components/ThemeUserProvider";
+import { GlobalSearch } from "@/components/GlobalSearch";
 
 export function Header() {
-  const { theme, toggleTheme, user, logout, openComposer, query, setQuery } = useApp();
+  const { theme, toggleTheme, user, logout, openComposer } = useApp();
   const dark = theme === "dark";
 
   return (
@@ -92,42 +93,7 @@ export function Header() {
         <div style={{ flex: "1 1 20px", minWidth: 0 }} />
 
         <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "flex-end", rowGap: 10 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "7px 12px",
-              border: "1px solid var(--line)",
-              borderRadius: 999,
-              background: "var(--card)",
-              flex: "0 1 auto",
-              minWidth: 0,
-            }}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ color: "var(--dim)" }}>
-              <circle cx="11" cy="11" r="7" />
-              <path d="M16.5 16.5 21 21" />
-            </svg>
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search films and shows"
-              aria-label="Search films and shows"
-              style={{
-                border: 0,
-                outline: 0,
-                background: "transparent",
-                color: "var(--ink)",
-                fontFamily: "var(--font-barlow), sans-serif",
-                fontSize: 13,
-                width: 150,
-                minWidth: 0,
-                flex: "0 1 150px",
-              }}
-            />
-          </div>
+          <GlobalSearch />
 
           <button
             type="button"

@@ -7,15 +7,20 @@ import { MovieHero } from "@/components/MovieHero";
 import { MovieShowtimes } from "@/components/MovieShowtimes";
 import { TitleReviews } from "@/components/TitleReviews";
 import { SimilarTitles } from "@/components/SimilarTitles";
-import { lobbyMovies, getMovieBySlug, similarMovies, communityReviews, showtimes } from "@/lib/data";
+import { similarMovies, showtimes } from "@/lib/data";
+import { getMovies, getMovie, getReviewsForSlug } from "@/lib/catalogue";
 import { getPoster, getBackdrop, getPosterMap, type ArtLookup } from "@/lib/fanart";
 
-export function generateStaticParams() {
-  return lobbyMovies.map((m) => ({ slug: m.slug }));
+// A title added after the last deploy still gets a page, rendered on demand.
+export const dynamicParams = true;
+
+// Built from the database, so a title added there gets a page without a code change.
+export async function generateStaticParams() {
+  return (await getMovies()).map((m) => ({ slug: m.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const movie = getMovieBySlug(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const movie = await getMovie(params.slug);
   if (!movie) return { title: "Movie not found — Hot Take" };
   return {
     title: `${movie.title} (${movie.year}) — Hot Take`,
@@ -24,10 +29,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 }
 
 export default async function MovieProfilePage({ params }: { params: { slug: string } }) {
-  const movie = getMovieBySlug(params.slug);
+  const movie = await getMovie(params.slug);
   if (!movie) notFound();
 
-  const related = similarMovies(movie, 4);
+  const allMovies = await getMovies();
+  const related = similarMovies(movie, 4, allMovies);
   const relatedLookups: Record<string, ArtLookup> = Object.fromEntries(
     related.map((m) => [m.slug, { kind: "movie" as const, id: m.tmdbId }])
   );
@@ -38,7 +44,7 @@ export default async function MovieProfilePage({ params }: { params: { slug: str
     getPosterMap(relatedLookups),
   ]);
 
-  const reviewsForMovie = communityReviews.filter((r) => r.slug === movie.slug);
+  const reviewsForMovie = await getReviewsForSlug(movie.slug);
   const showtime = showtimes.find((s) => s.title === movie.title);
 
   return (

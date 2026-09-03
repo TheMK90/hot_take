@@ -8,12 +8,14 @@ Build the whole app against the current mock/local data first — database creat
 
 ```bash
 npm install
-cp .env.example .env.local   # then paste the fanart.tv key into FANART_API_KEY
+cp .env.example .env.local   # then paste the fanart.tv key into FANART_API_KEY,
+                              # and an Anthropic key into ANTHROPIC_API_KEY for the chat widget
 npm run dev                  # http://localhost:3000
 ```
 
 Without `FANART_API_KEY` the app still runs — posters fall back to the dashed
-placeholder boxes rather than erroring.
+placeholder boxes rather than erroring. Without `ANTHROPIC_API_KEY` the app still
+runs too — the "Ask Hot Take" chat widget reports itself offline rather than erroring.
 
 | Command | What it is for |
 | --- | --- |
@@ -62,6 +64,10 @@ deferred is listed under "After v1" below — it is not dropped, just not blocki
 - [x] Search bar: functional over `lib/data.ts`, case-insensitive, filtering films and
       shows together. Filter state lives in `ThemeUserProvider` so the header, the genre
       tiles and both rails share one source of truth
+- [x] Global search over TMDb (`lib/tmdb.ts` behind `/api/search`) — any film or series can
+      be found and reviewed, not just the catalogue. fanart.tv cannot do this: it is keyed
+      by id and a title lookup returns `{}`, so TMDb supplies search and the ids while
+      fanart keeps supplying artwork for our own pages
 - [x] Browse/filter by genre — the tiles are now toggle buttons carrying `aria-pressed`.
       Genre counts are derived from the catalogue instead of hardcoded, so a tile can no
       longer promise 27 documentaries and filter down to nothing
@@ -84,12 +90,26 @@ deferred is listed under "After v1" below — it is not dropped, just not blocki
 - [ ] "Add movies" flow (decide: any signed-in user, or admin-only)
 - [ ] "Edit movie entries" flow (likely admin-only, or an edit-suggestion/moderation flow)
 - [ ] Personal recap, "Your Year in Film" (DECISIONS §5)
+- [x] AI chat assistant ("Ask Hot Take") — a floating, Claude-powered widget grounded in
+      the site's own movie/show catalogue, for recommendations and general film chat. Not
+      from the original whiteboard notes; added separately, on branch `y-alireza-ai-chat`.
+      Server-side only (`app/api/chat/route.ts`, `lib/ai.ts`); needs `ANTHROPIC_API_KEY`
+      (see "Getting the app running"). Built and manually verified end-to-end with a real key.
 
 **How to verify Phase 1:** `npm run dev`, then in the browser: type a film name in the
 header search and confirm the rail narrows; click a genre tile and confirm only that genre
 shows; rate a film, reload, and confirm the rating survived. Then unplug your mouse — tab
 to the rating input, set a score with the arrow keys alone, and confirm a screen reader
 announces the label. If that fails, the rating input is not done.
+
+**How to verify the AI chat assistant:** paste a real key into `ANTHROPIC_API_KEY` in
+`.env.local`, `npm run dev`, and open the site. Click the round button bottom-right, confirm
+the panel opens with a greeting, then send a few messages: a normal recommendation ask,
+something about a title *not* in `lib/data.ts` (it should still answer sensibly rather than
+pretend it doesn't exist), and something long/off-topic. Reload mid-conversation and confirm
+history does not persist (expected for now — there is no backend yet). Then comment out
+`ANTHROPIC_API_KEY` and confirm the widget fails gracefully ("Couldn't reach the chat right
+now") instead of crashing the page.
 
 ## Phase 2 — Supporting pages the above needs
 
@@ -100,8 +120,9 @@ announces the label. If that fails, the rating input is not done.
       catalogue so a one-of-a-kind genre still gets suggestions). Lobby posters,
       review card titles, and Top 10 entries all link there now.
 - [ ] User profile page (handle, avatar, rating history, own reviews)
-- [ ] Custom 404 page (an invalid `/movies/slug` currently falls through to Next's
-      stock "This page could not be found", not a themed one)
+- [x] ~~Custom 404 page~~ — `app/not-found.tsx` covers both an unknown route and an
+      invalid `/movies/slug` or `/shows/slug`, since Next routes `notFound()` calls
+      there too
 - [ ] Real destinations for the footer links (Community rules, Cinemas, Archive currently just anchor back to sections on the homepage)
 - [x] TV show detail pages — `/shows/[slug]`, with `ShowHero` mirroring `MovieHero`.
       The "On the small screen" cards link into them. `MovieReviews` became
@@ -139,7 +160,8 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 
 ## Phase 5 — Supabase: database creation & wiring
 
-- [ ] Create the Supabase project (and a separate one for local/dev if the team wants staging isolation)
+- [x] Supabase project created and `schema.sql` applied — verified live: all four tables
+      exist and 18 titles are seeded with their artwork ids
 - [x] Design tables — written as **[supabase/schema.sql](supabase/schema.sql)**, ready to paste
       into the SQL editor: `profiles`, `titles` (films and series in one table, since search
       and the genre filter span both), `reviews` and `review_votes`, plus RLS policies and a
@@ -148,19 +170,32 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 - [ ] Enable Supabase Auth (email/password at minimum; decide if social login is wanted),
       **including anonymous sign-in** — guests can post without an account (DECISIONS §8),
       so the RLS ownership rules must work for an author with no account
-- [ ] Write Row Level Security policies: anyone can read movies/reviews; only the authoring user can edit/delete their own review; only admins can add/edit movie entries
+- [x] RLS policies written and **verified against the live project**: anon reads all 18
+      titles, an anon insert into `titles` is refused with `42501`, and a guest review
+      insert succeeds. Enabling anonymous sign-in turned out to be unnecessary — the plain
+      `anon` role satisfies the guest branch of `reviews_insert`
 - [ ] Create a Storage bucket for review stills and user avatars, with an upload policy
       (movie/show posters no longer need this — they come from fanart.tv)
 - [x] ~~Replace the placeholder movie list with real films~~ — `lib/data.ts` now holds ten
       real films with TMDb ids and eight real series with TVDB ids
 - [ ] Seed the database with those rows, carrying the `tmdbId`/`tvdbId` columns across so
       posters keep resolving once the data moves out of `lib/data.ts`
-- [ ] Add `@supabase/supabase-js` (and `@supabase/ssr` for server components), `.env.local` with the project URL/anon key, keep it out of git
+- [x] `@supabase/supabase-js` added, project URL and anon key in `.env.local` (gitignored).
+      `lib/supabase.ts` returns null rather than throwing when unconfigured, so the app
+      falls back to `lib/data.ts` instead of going down
+- [x] Persist externally-searched titles — clicking a TMDb result now POSTs to
+      `/api/titles`, which validates the id against TMDb, writes the row with the
+      service-role client (the anon key cannot write to `titles` by design) and redirects to
+      the page that write created. Verified with Mortal Kombat and The Bear: both got full
+      pages with fanart artwork resolved from their ids
 - [ ] Replace `ThemeUserProvider`'s fake localStorage auth with real Supabase Auth (sign up, log in, log out, session persistence, password reset)
 - [ ] Replace the hardcoded `communityReviews` in `lib/data.ts` with a live query, and make `submitReview` insert into the `reviews` table instead of local state only
 - [ ] Move review votes (DECISIONS §8) into the database — they are per-browser
       localStorage today, so no two viewers see the same totals
-- [ ] Replace hardcoded `lobbyMovies` / `top10` / `genres` with queries once movies live in the database
+- [x] `lobbyMovies` / `tvShows` / `genres` now come from the database via `lib/catalogue.ts`.
+      Verified by inserting a title that existed only in Supabase and watching it get its own
+      page. Genre counts are derived from whatever rows come back
+- [ ] `top10` is still hardcoded — it needs real aggregate scores, so it waits for review volume
 - [x] ~~Replace poster/still `PlaceholderImage` usages with real images~~ — done via
       fanart.tv (`lib/fanart.ts`), not Supabase Storage. `PlaceholderImage` is still the
       fallback when a title has no artwork, so keep it
@@ -179,7 +214,9 @@ confirm you get an error state, not a blank page.
 
 - [ ] Merge the working branch into `dev`, then `dev` into `main` per the repo's branch convention
 - [ ] Create the Vercel project, link the GitHub repo
-- [ ] Add the Supabase URL/anon key (and any other secrets) as Vercel environment variables
+- [ ] Add every secret as a Vercel environment variable: the Supabase URL/anon key **plus
+      `FANART_API_KEY` and `TMDB_API_KEY`** — both are in `.env.local`, which is gitignored,
+      so a deploy without them silently loses posters and global search
 - [ ] Deploy, then smoke-test the live production URL end to end
 - [ ] (Optional) connect a custom domain
 

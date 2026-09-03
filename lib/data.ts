@@ -158,8 +158,8 @@ export function getMovieBySlug(slug: string): Movie | undefined {
  * with the rest of the catalogue (highest rated first) so a one-of-a-kind genre
  * still gets a full set of suggestions rather than an empty rail.
  */
-export function similarMovies(movie: Movie, limit = 4): Movie[] {
-  const others = lobbyMovies.filter((m) => m.slug !== movie.slug);
+export function similarMovies(movie: Movie, limit = 4, pool: Movie[] = lobbyMovies): Movie[] {
+  const others = pool.filter((m) => m.slug !== movie.slug);
   const sameGenre = others.filter((m) => m.genre === movie.genre);
   const rest = others.filter((m) => m.genre !== movie.genre).sort((a, b) => b.score - a.score);
   return [...sameGenre, ...rest].slice(0, limit);
@@ -260,8 +260,8 @@ export function getShowBySlug(slug: string): Show | undefined {
 }
 
 /** The show equivalent of similarMovies: same genre first, then best-rated. */
-export function similarShows(show: Show, limit = 4): Show[] {
-  const others = tvShows.filter((s) => s.slug !== show.slug);
+export function similarShows(show: Show, limit = 4, pool: Show[] = tvShows): Show[] {
+  const others = pool.filter((s) => s.slug !== show.slug);
   const sameGenre = others.filter((s) => s.genre === show.genre);
   const rest = others.filter((s) => s.genre !== show.genre).sort((a, b) => b.score - a.score);
   return [...sameGenre, ...rest].slice(0, limit);
@@ -404,10 +404,10 @@ export type Genre = { name: string; count: number };
 // Derived from the catalogue rather than hardcoded. The counts have to be real
 // now that the tiles actually filter -- a "Documentary (27)" tile that filters
 // down to nothing is worse than no tile at all.
-function buildGenres(): Genre[] {
+export function buildGenres(movies: Movie[] = lobbyMovies, shows: Show[] = tvShows): Genre[] {
   const counts = new Map<string, number>();
-  for (const m of lobbyMovies) counts.set(m.genre, (counts.get(m.genre) ?? 0) + 1);
-  for (const s of tvShows) counts.set(s.genre, (counts.get(s.genre) ?? 0) + 1);
+  for (const m of movies) counts.set(m.genre, (counts.get(m.genre) ?? 0) + 1);
+  for (const s of shows) counts.set(s.genre, (counts.get(s.genre) ?? 0) + 1);
   return [...counts.entries()]
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
@@ -421,14 +421,14 @@ export function matchesQuery(title: string, query: string): boolean {
   return q.length === 0 || title.toLowerCase().includes(q);
 }
 
-export function filterMovies(query: string, genre: string | null): Movie[] {
-  return lobbyMovies.filter(
+export function filterMovies(query: string, genre: string | null, pool: Movie[] = lobbyMovies): Movie[] {
+  return pool.filter(
     (m) => matchesQuery(m.title, query) && (genre === null || m.genre === genre)
   );
 }
 
-export function filterShows(query: string, genre: string | null): Show[] {
-  return tvShows.filter(
+export function filterShows(query: string, genre: string | null, pool: Show[] = tvShows): Show[] {
+  return pool.filter(
     (s) => matchesQuery(s.title, query) && (genre === null || s.genre === genre)
   );
 }

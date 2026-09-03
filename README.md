@@ -10,11 +10,12 @@ rate it. review it. roast it.
 
 ```bash
 npm install
-cp .env.example .env.local   # then paste the fanart.tv key into FANART_API_KEY
+cp .env.example .env.local   # then paste in FANART_API_KEY and TMDB_API_KEY
 npm run dev                  # http://localhost:3000
 ```
 
-The app runs without the key — posters just fall back to placeholder boxes.
+The app runs without either key: posters fall back to placeholder boxes, and search covers
+only the local catalogue instead of all of TMDb.
 
 | Command | What it does |
 | --- | --- |
@@ -54,9 +55,19 @@ Movie and show artwork comes from [fanart.tv](https://fanart.tv) via
 `app/page.tsx` and passed to client components as finished URLs, so the API key never
 reaches the browser. Put the key in `.env.local`, which is gitignored; never commit it.
 
-fanart.tv has no title search, so every catalogue entry in
-[`lib/data.ts`](lib/data.ts) carries the id its artwork is fetched with — `tmdbId` for
-films, `tvdbId` for series. Adding a title means looking its id up first.
+fanart.tv has no title search — it is keyed by id, and a title lookup returns `{}`. So every
+catalogue entry in [`lib/data.ts`](lib/data.ts) carries the id its artwork is fetched with:
+`tmdbId` for films, `tvdbId` for series.
+
+## Search
+
+The header box does two things at once. It filters the homepage rails instantly from the
+local catalogue, and it queries TMDb through [`/api/search`](app/api/search/route.ts) for
+everything else, so anyone can find and review a film we do not hold. Catalogue results are
+listed separately because those have pages to visit; external ones only offer a review.
+
+TMDb supplies the search and the ids, fanart supplies the artwork. They fit together because
+fanart is keyed by TMDb ids for films in the first place. Both keys are server-side only.
 
 ## Where things are going
 
