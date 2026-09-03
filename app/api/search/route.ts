@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { searchTitles, hasTmdbKey } from "@/lib/tmdb";
-import { lobbyMovies, tvShows, matchesQuery } from "@/lib/data";
+import { matchesQuery } from "@/lib/data";
+import { getMovies, getShows } from "@/lib/catalogue";
 
 // Search endpoint for the header box. It exists so the TMDb key stays on the
 // server; the browser only ever sees results.
@@ -15,11 +16,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ catalogue: [], external: [], tmdbEnabled: hasTmdbKey() });
   }
 
+  const [movies, shows] = await Promise.all([getMovies(), getShows()]);
+
   const catalogue = [
-    ...lobbyMovies
+    ...movies
       .filter((m) => matchesQuery(m.title, query))
       .map((m) => ({ kind: "movie" as const, slug: m.slug, title: m.title, year: m.year })),
-    ...tvShows
+    ...shows
       .filter((s) => matchesQuery(s.title, query))
       .map((s) => ({ kind: "tv" as const, slug: s.slug, title: s.title, year: s.firstAired })),
   ].slice(0, 8);
@@ -28,7 +31,7 @@ export async function GET(request: Request) {
 
   // Anything already in the catalogue is shown from the catalogue, with its own
   // page — no point offering the same film twice under two headings.
-  const known = new Set([...lobbyMovies, ...tvShows].map((t) => t.title.toLowerCase()));
+  const known = new Set([...movies, ...shows].map((t) => t.title.toLowerCase()));
   const external = hits.filter((h) => !known.has(h.title.toLowerCase())).slice(0, 8);
 
   return NextResponse.json({ catalogue, external, tmdbEnabled: hasTmdbKey() });

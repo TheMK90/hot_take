@@ -143,7 +143,8 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 
 ## Phase 5 — Supabase: database creation & wiring
 
-- [ ] Create the Supabase project (and a separate one for local/dev if the team wants staging isolation)
+- [x] Supabase project created and `schema.sql` applied — verified live: all four tables
+      exist and 18 titles are seeded with their artwork ids
 - [x] Design tables — written as **[supabase/schema.sql](supabase/schema.sql)**, ready to paste
       into the SQL editor: `profiles`, `titles` (films and series in one table, since search
       and the genre filter span both), `reviews` and `review_votes`, plus RLS policies and a
@@ -152,14 +153,19 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 - [ ] Enable Supabase Auth (email/password at minimum; decide if social login is wanted),
       **including anonymous sign-in** — guests can post without an account (DECISIONS §8),
       so the RLS ownership rules must work for an author with no account
-- [ ] Write Row Level Security policies: anyone can read movies/reviews; only the authoring user can edit/delete their own review; only admins can add/edit movie entries
+- [x] RLS policies written and **verified against the live project**: anon reads all 18
+      titles, an anon insert into `titles` is refused with `42501`, and a guest review
+      insert succeeds. Enabling anonymous sign-in turned out to be unnecessary — the plain
+      `anon` role satisfies the guest branch of `reviews_insert`
 - [ ] Create a Storage bucket for review stills and user avatars, with an upload policy
       (movie/show posters no longer need this — they come from fanart.tv)
 - [x] ~~Replace the placeholder movie list with real films~~ — `lib/data.ts` now holds ten
       real films with TMDb ids and eight real series with TVDB ids
 - [ ] Seed the database with those rows, carrying the `tmdbId`/`tvdbId` columns across so
       posters keep resolving once the data moves out of `lib/data.ts`
-- [ ] Add `@supabase/supabase-js` (and `@supabase/ssr` for server components), `.env.local` with the project URL/anon key, keep it out of git
+- [x] `@supabase/supabase-js` added, project URL and anon key in `.env.local` (gitignored).
+      `lib/supabase.ts` returns null rather than throwing when unconfigured, so the app
+      falls back to `lib/data.ts` instead of going down
 - [ ] Persist externally-searched titles: reviewing a TMDb result currently stores only the
       title string. Insert the title into `titles` (with its tmdb_id) on first review so it
       gains a real page like the rest of the catalogue
@@ -167,7 +173,10 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 - [ ] Replace the hardcoded `communityReviews` in `lib/data.ts` with a live query, and make `submitReview` insert into the `reviews` table instead of local state only
 - [ ] Move review votes (DECISIONS §8) into the database — they are per-browser
       localStorage today, so no two viewers see the same totals
-- [ ] Replace hardcoded `lobbyMovies` / `top10` / `genres` with queries once movies live in the database
+- [x] `lobbyMovies` / `tvShows` / `genres` now come from the database via `lib/catalogue.ts`.
+      Verified by inserting a title that existed only in Supabase and watching it get its own
+      page. Genre counts are derived from whatever rows come back
+- [ ] `top10` is still hardcoded — it needs real aggregate scores, so it waits for review volume
 - [x] ~~Replace poster/still `PlaceholderImage` usages with real images~~ — done via
       fanart.tv (`lib/fanart.ts`), not Supabase Storage. `PlaceholderImage` is still the
       fallback when a title has no artwork, so keep it

@@ -1,9 +1,9 @@
 "use client";
 
-import { genres } from "@/lib/data";
+import { type Genre } from "@/lib/data";
 import { useApp } from "@/components/ThemeUserProvider";
 
-export function Genres() {
+export function Genres({ genres }: { genres: Genre[] }) {
   const { genre: active, toggleGenre } = useApp();
 
   return (
