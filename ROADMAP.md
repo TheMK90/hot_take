@@ -8,12 +8,14 @@ Build the whole app against the current mock/local data first — database creat
 
 ```bash
 npm install
-cp .env.example .env.local   # then paste the fanart.tv key into FANART_API_KEY
+cp .env.example .env.local   # then paste the fanart.tv key into FANART_API_KEY,
+                              # and an Anthropic key into ANTHROPIC_API_KEY for the chat widget
 npm run dev                  # http://localhost:3000
 ```
 
 Without `FANART_API_KEY` the app still runs — posters fall back to the dashed
-placeholder boxes rather than erroring.
+placeholder boxes rather than erroring. Without `ANTHROPIC_API_KEY` the app still
+runs too — the "Ask Hot Take" chat widget reports itself offline rather than erroring.
 
 | Command | What it is for |
 | --- | --- |
@@ -76,12 +78,26 @@ deferred is listed under "After v1" below — it is not dropped, just not blocki
 - [ ] "Add movies" flow (decide: any signed-in user, or admin-only)
 - [ ] "Edit movie entries" flow (likely admin-only, or an edit-suggestion/moderation flow)
 - [ ] Personal recap, "Your Year in Film" (DECISIONS §5)
+- [x] AI chat assistant ("Ask Hot Take") — a floating, Claude-powered widget grounded in
+      the site's own movie/show catalogue, for recommendations and general film chat. Not
+      from the original whiteboard notes; added separately, on branch `y-alireza-ai-chat`.
+      Server-side only (`app/api/chat/route.ts`, `lib/ai.ts`); needs `ANTHROPIC_API_KEY`
+      (see "Getting the app running"). Built and manually verified end-to-end with a real key.
 
 **How to verify Phase 1:** `npm run dev`, then in the browser: type a film name in the
 header search and confirm the rail narrows; click a genre tile and confirm only that genre
 shows; rate a film, reload, and confirm the rating survived. Then unplug your mouse — tab
 to the rating input, set a score with the arrow keys alone, and confirm a screen reader
 announces the label. If that fails, the rating input is not done.
+
+**How to verify the AI chat assistant:** paste a real key into `ANTHROPIC_API_KEY` in
+`.env.local`, `npm run dev`, and open the site. Click the round button bottom-right, confirm
+the panel opens with a greeting, then send a few messages: a normal recommendation ask,
+something about a title *not* in `lib/data.ts` (it should still answer sensibly rather than
+pretend it doesn't exist), and something long/off-topic. Reload mid-conversation and confirm
+history does not persist (expected for now — there is no backend yet). Then comment out
+`ANTHROPIC_API_KEY` and confirm the widget fails gracefully ("Couldn't reach the chat right
+now") instead of crashing the page.
 
 ## Phase 2 — Supporting pages the above needs
 
