@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..700&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+:root{
+  --bg:#fdf6ef; --bg2:#ffffff; --ink:#1d0f0c; --dim:#8a6a60;
+  --brand:#cf1020; --onbrand:#fffaf5; --line:rgba(29,15,12,.13);
+  --card:#ffffff; --card2:#fff5ee; --rate:#cf1020; --rateoff:rgba(29,15,12,.16);
+  --frameA:#b0161f; --frameB:#7d0d15; --matte:#fff8f0;
+  --hdr:rgba(253,246,239,.88); --shadow:0 16px 40px rgba(120,20,10,.14);
+  --stripe-op:1; --photo-op:0; --neon:#cf1020; --gold:#b8862c;
+  --plate-bg:#fffaf2; --plate-border:4px solid #8a5a12; --plate-radius:4px;
+  --plate-shadow:0 26px 64px rgba(40,4,4,.4),0 0 46px rgba(255,196,110,.45);
+  --crest-h:54px; --bulb-h:16px; --valance-h:22px; --plate-pad:42px 40px 40px; --plate-txt:var(--ink);
+  --plate-frame:8px solid #8f121c;
+  --logo-bg:#c0391c; --logo-ink:#fdf3e7;
+}
+[data-hottake-theme="dark"]{
+  --bg:#07060a; --bg2:#0c0a0f; --ink:#fbf4e4; --dim:#cbb894;
+  --brand:#f0d489; --onbrand:#0a0810; --line:rgba(240,212,137,.26);
+  --card:#100e13; --card2:#15121a; --rate:#f3dc9b; --rateoff:rgba(251,244,228,.18);
+  --frameA:#d4ae3c; --frameB:#8a6d16; --matte:#0e0c10;
+  --hdr:rgba(7,6,10,.82); --shadow:0 22px 60px rgba(0,0,0,.65);
+  --plate-bg:transparent; --plate-border:0 solid transparent; --plate-radius:0;
+  --plate-shadow:none;
+  --crest-h:0px; --bulb-h:0px; --valance-h:0px; --plate-pad:12px 0 0; --plate-txt:var(--ink);
+  --plate-frame:0 solid transparent;
+  --logo-bg:#0a0810; --logo-ink:#f0d489;
+  --stripe-op:0; --photo-op:.62; --neon:#8fd3ff; --gold:#f0d489;
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-decoration:none}
+a:hover{color:var(--ink)}
+@keyframes bulbchase{0%{background-position:0 0}100%{background-position:56px 0}}
+@keyframes swayin{0%{transform:rotate(-1.4deg)}100%{transform:rotate(0deg)}}
+@keyframes neonpulse{0%,100%{opacity:.85}50%{opacity:1}}
+[data-rail]{scrollbar-width:none}
+[data-rail]::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+
+<div data-hottake-root="1" style="position:relative;min-height:100vh;background:var(--bg);color:var(--ink);overflow-x:hidden">
+
+  <div style="position:absolute;inset:0;height:1100px;pointer-events:none;overflow:hidden">
+    <div style="position:absolute;inset:0;opacity:var(--photo-op);background-image:url('./assets/theatre-marquee.png');background-size:cover;background-position:center 30%;filter:saturate(1.05) contrast(1.05)"></div>
+    <div style="position:absolute;inset:0;opacity:var(--stripe-op);background:linear-gradient(180deg,#6d0d13 0,#87131a 250px,#8e2a22 430px,#c9a98c 510px,var(--bg) 560px)"></div>
+    <div style="position:absolute;left:0;right:0;top:0;height:520px;opacity:var(--stripe-op);background:repeating-linear-gradient(90deg,rgba(0,0,0,.20) 0 4px,rgba(255,238,220,.09) 4px 10px,rgba(0,0,0,0) 10px 104px)"></div>
+    <div style="position:absolute;left:0;right:0;top:0;height:150px;opacity:var(--stripe-op);background:repeating-linear-gradient(135deg,rgba(255,231,196,.11) 0 12px,rgba(0,0,0,0) 12px 24px)"></div>
+    <div style="position:absolute;left:0;right:0;top:434px;height:9px;opacity:var(--stripe-op);background:linear-gradient(180deg,#e8b25a,#8a5a12)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.32) 0%,rgba(0,0,0,.06) 24%,rgba(0,0,0,0) 42%,var(--bg) 78%,var(--bg) 100%)"></div>
+  </div>
+
+  <header style="position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:var(--hdr);border-bottom:1px solid var(--line)">
+    <div style="max-width:1320px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;row-gap:12px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <svg width="54" height="54" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Hot Take logo" style="display:block;flex:none;align-self:center;margin:-4px 0">
+          <rect x="0" y="0" width="512" height="512" rx="104" fill="var(--logo-bg)"></rect>
+          <path d="M256 92c14 36 23 55 34 65 8 7 16 4 23-7 41 57 63 95 63 141 0 68-54 110-120 110s-120-42-120-110c0-46 22-84 63-141 11-10 20-29 34-58h23z" fill="var(--logo-ink)"></path>
+          <path d="M312 322c40-26 78-36 106-36 29 0 49 17 49 39 0 23-21 39-49 39-32 0-68 12-98 30l-8-72z" fill="var(--logo-ink)"></path>
+          <path d="M318 349c34-21 66-29 92-29 20 0 32 8 32 19 0 12-12 20-32 20-28 0-60 10-88 25l-4-35z" fill="var(--logo-bg)"></path>
+          <g fill="var(--logo-ink)">
+            <rect x="330" y="330" width="14" height="14" rx="3"></rect>
+            <rect x="360" y="323" width="14" height="14" rx="3"></rect>
+            <rect x="392" y="319" width="14" height="14" rx="3"></rect>
+            <rect x="330" y="382" width="14" height="14" rx="3"></rect>
+            <rect x="360" y="376" width="14" height="14" rx="3"></rect>
+            <rect x="392" y="372" width="14" height="14" rx="3"></rect>
+          </g>
+          <circle cx="256" cy="292" r="74" fill="var(--logo-bg)"></circle>
+          <g fill="var(--logo-ink)">
+            <circle cx="256" cy="292" r="21"></circle>
+            <circle cx="256" cy="245" r="17"></circle>
+            <circle cx="256" cy="339" r="17"></circle>
+            <circle cx="215" cy="268" r="17"></circle>
+            <circle cx="297" cy="268" r="17"></circle>
+            <circle cx="215" cy="316" r="17"></circle>
+            <circle cx="297" cy="316" r="17"></circle>
+          </g>
+          <g fill="#181008">
+            <ellipse cx="220" cy="196" rx="17" ry="20"></ellipse>
+            <ellipse cx="278" cy="196" rx="17" ry="20"></ellipse>
+          </g>
+          <g fill="var(--logo-ink)">
+            <circle cx="214" cy="189" r="6"></circle>
+            <circle cx="272" cy="189" r="6"></circle>
+          </g>
+        </svg>
+        <div style="display:flex;flex-direction:column;line-height:1">
+          <span style="font-family:'Bodoni Moda',serif;font-weight:900;font-size:23px;letter-spacing:.02em;white-space:nowrap">Hot Take</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.24em;font-size:10px;color:var(--dim);margin-top:3px;white-space:nowrap">Reviews by film fans</span>
+        </div>
+      </div>
+      <nav style="display:flex;gap:22px;margin-left:6px;white-space:nowrap;flex:0 0 auto;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:13px;font-weight:600">
+        <a href="#reviews" style="color:var(--ink)" style-hover="color:var(--brand)">Reviews</a>
+        <a href="#showing" style="color:var(--ink)" style-hover="color:var(--brand)">Now showing</a>
+        <a href="#top10" style="color:var(--ink)" style-hover="color:var(--brand)">Top 10</a>
+        <a href="#genres" style="color:var(--ink)" style-hover="color:var(--brand)">Genres</a>
+      </nav>
+      <div style="flex:1 1 20px;min-width:0"></div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end;row-gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);flex:0 1 auto;min-width:0">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--dim)"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5 21 21"></path></svg>
+          <input type="text" placeholder="Search films, reviewers" style="border:0;outline:0;background:transparent;color:var(--ink);font-family:Barlow,sans-serif;font-size:13px;width:150px;min-width:0;flex:0 1 150px">
+        </div>
+        <button type="button" onClick="{{ toggleTheme }}" aria-label="Switch theme" style="display:flex;align-items:center;gap:9px;padding:8px 14px 8px 10px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:700" style-hover="border-color:var(--brand)">
+          <span style="display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:var(--onbrand)">{{ themeGlyph }}</span>
+          {{ themeLabel }}
+        </button>
+        <sc-if value="{{ signedOut }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" onClick="{{ openLogin }}" style="padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:700" style-hover="border-color:var(--brand);color:var(--brand)">Log in</button>
+            <button type="button" onClick="{{ openSignup }}" style="padding:9px 16px;border:1px solid var(--brand);border-radius:999px;background:var(--brand);color:var(--onbrand);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:700" style-hover="filter:brightness(1.08)">Sign up</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" onClick="{{ openComposer }}" style="padding:9px 16px;border:1px solid var(--brand);border-radius:999px;background:var(--brand);color:var(--onbrand);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:700" style-hover="filter:brightness(1.08)">Write a review</button>
+            <div style="display:flex;align-items:center;gap:9px;padding:6px 14px 6px 6px;border:1px solid var(--line);border-radius:999px;background:var(--card)">
+              <span style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:var(--onbrand);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700">{{ userInitials }}</span>
+              <span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600">{{ userHandle }}</span>
+              <button type="button" onClick="{{ logout }}" aria-label="Log out" style="border:0;background:transparent;color:var(--dim);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700" style-hover="color:var(--brand)">Out</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </header>
+
+  <section style="position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:58px 28px 34px;display:flex;justify-content:center">
+    <div style="position:relative;width:100%;max-width:920px;border:var(--plate-frame);border-radius:var(--plate-radius);box-shadow:var(--plate-shadow)">
+      <div style="overflow:hidden;height:var(--crest-h);display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#8f121c,#5d070d);border:var(--plate-border);border-bottom:0;border-radius:var(--plate-radius) var(--plate-radius) 0 0;box-shadow:inset 0 0 0 3px rgba(232,178,90,.85)">
+        <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.42em;font-size:19px;font-weight:700;color:#ffe6a8;text-shadow:0 0 12px rgba(255,190,110,.9)">Hot Take</span>
+      </div>
+      <div style="overflow:hidden;height:var(--bulb-h);background:radial-gradient(circle at 12px 8px,#fff2cf 0 3.4px,rgba(255,242,207,0) 4.4px) repeat-x,linear-gradient(180deg,#e8b25a,#8a5a12);background-size:32px var(--bulb-h),100% 100%;border-left:var(--plate-border);border-right:var(--plate-border)"></div>
+      <div style="position:relative;background:var(--plate-bg);border:var(--plate-border);border-top:0;border-bottom:0;padding:var(--plate-pad);text-align:center">
+        <div style="display:inline-flex;align-items:center;gap:10px;padding:5px 13px;border:1px solid var(--line);border-radius:2px;background:var(--card2);font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.26em;font-size:11px;font-weight:600;color:var(--dim)">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--brand);animation:neonpulse 1.8s ease-in-out infinite"></span>
+          {{ reviewCountLabel }} reviews from film fans
+        </div>
+        <h1 style="margin:18px 0 0;font-family:'Bodoni Moda',serif;font-weight:900;font-size:clamp(40px,5.8vw,78px);line-height:.95;letter-spacing:-.02em;color:var(--plate-txt);text-wrap:balance">Every film,<br>one hot take.</h1>
+        <p style="margin:16px auto 0;max-width:520px;font-size:16px;line-height:1.55;color:var(--dim);text-wrap:pretty">No critics on staff. Every score here comes from someone who bought a ticket. Rate what you have seen, and read what everyone else thought.</p>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap">
+          <button type="button" onClick="{{ openComposer }}" style="padding:13px 24px;border:1px solid var(--brand);border-radius:999px;background:var(--brand);color:var(--onbrand);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700" style-hover="filter:brightness(1.08)">Write your review</button>
+          <a href="#reviews" style="padding:13px 24px;border:1px solid var(--line);border-radius:999px;color:var(--ink);font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700" style-hover="border-color:var(--brand);color:var(--brand)">Read reviews</a>
+        </div>
+      </div>
+      <div style="overflow:hidden;height:var(--valance-h);background:repeating-linear-gradient(90deg,#a5121c 0 6px,#f6e9dc 6px 12px);border:var(--plate-border);border-top:0;border-radius:0 0 var(--plate-radius) var(--plate-radius)"></div>
+    </div>
+  </section>
+
+  <section style="position:relative;z-index:2;padding:26px 0 10px">
+    <div style="max-width:1320px;margin:0 auto;padding:0 28px 18px;display:flex;align-items:flex-end;gap:16px">
+      <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:14px;font-weight:700;color:var(--ink)">In the lobby</h2>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+      <div style="display:flex;gap:8px">
+        <button type="button" onClick="{{ railPrev }}" aria-label="Previous" style="width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"></path></svg>
+        </button>
+        <button type="button" onClick="{{ railNext }}" aria-label="Next" style="width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div data-rail="1" ref="{{ railRef }}" style="display:flex;gap:34px;align-items:flex-start;overflow-x:auto;overscroll-behavior-x:contain;padding:34px calc(50vw - 165px) 66px;scroll-snap-type:x proximity;perspective:1600px;cursor:grab;user-select:none">
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow);animation:swayin .9s cubic-bezier(.3,1.4,.4,1) both">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p1" shape="rect" placeholder="Poster 1"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">The Long Interval</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Drama · 2026 · 118 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p2" shape="rect" placeholder="Poster 2"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Nightshift Radio</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Thriller · 2026 · 104 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p3" shape="rect" placeholder="Poster 3"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Salt Flats</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Western · 2026 · 131 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p4" shape="rect" placeholder="Poster 4"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Paper Lanterns</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Romance · 2026 · 96 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p5" shape="rect" placeholder="Poster 5"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Understudy</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Comedy · 2026 · 101 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p6" shape="rect" placeholder="Poster 6"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Grand Cascade</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Epic · 2026 · 152 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p7" shape="rect" placeholder="Poster 7"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Copper Wire</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Crime · 2026 · 124 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p8" shape="rect" placeholder="Poster 8"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Second House</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Horror · 2026 · 89 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p9" shape="rect" placeholder="Poster 9"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Marigold Hour</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Documentary · 2026 · 78 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article data-card="1" style="flex:none;width:330px;scroll-snap-align:center;transform-style:preserve-3d;will-change:transform">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:1px;height:34px;background:var(--line)"></div>
+          <div style="width:11px;height:11px;border-radius:50%;background:var(--frameB);margin-bottom:-6px"></div>
+          <div style="width:100%;padding:14px;border-radius:6px;background:linear-gradient(160deg,var(--frameA),var(--frameB));box-shadow:var(--shadow)">
+            <div style="padding:10px;background:var(--matte);border-radius:3px">
+              <div style="position:relative;width:100%;aspect-ratio:2/3">
+                <image-slot id="ht-p10" shape="rect" placeholder="Poster 10"></image-slot>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:18px;text-align:center;width:100%">
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700">Twelve Winters</h3>
+            <p style="margin:6px 0 10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--dim)">Drama · 2026 · 143 min</p>
+            <div style="display:flex;justify-content:center;gap:5px">
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rate)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" style="color:var(--rateoff)"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="reviews" style="position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:56px 28px 10px">
+    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:26px">
+      <h2 style="margin:0;font-family:'Bodoni Moda',serif;font-size:34px;font-weight:800">Latest from the community</h2>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+      <a href="#reviews" style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:700">All {{ reviewCountLabel }} reviews</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px">
+
+      <sc-for list="{{ myReviews }}" as="rev" hint-placeholder-count="0">
+        <article style="display:flex;flex-direction:column;background:var(--card);border:1px solid var(--brand);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)">
+          <div style="padding:20px 22px 22px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:10px;font-weight:700;padding:4px 8px;border-radius:4px;background:var(--brand);color:var(--onbrand)">Your review</span>
+              <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">{{ rev.score }} / 5</span>
+            </div>
+            <h3 style="margin:0 0 8px;font-family:'Bodoni Moda',serif;font-size:23px;font-weight:700">{{ rev.film }}</h3>
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.55;color:var(--dim);text-wrap:pretty">{{ rev.body }}</p>
+            <div style="display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">
+              <span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:var(--onbrand);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;font-weight:700">{{ rev.initials }}</span>
+              {{ rev.byline }}
+            </div>
+          </div>
+        </article>
+      </sc-for>
+
+      <article style="display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)">
+        <div style="position:relative;height:180px"><image-slot id="ht-r1" shape="rect" placeholder="Still"></image-slot></div>
+        <div style="padding:20px 22px 22px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:10px;font-weight:700;padding:4px 8px;border-radius:4px;background:var(--brand);color:var(--onbrand)">Top rated</span>
+            <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">4.5 / 5</span>
+          </div>
+          <h3 style="margin:0 0 8px;font-family:'Bodoni Moda',serif;font-size:23px;font-weight:700">The Long Interval</h3>
+          <p style="margin:0 0 16px;font-size:15px;line-height:1.55;color:var(--dim);text-wrap:pretty">Two hours of people not saying the thing, and it earns every silence. The last reel is the best editing of the year.</p>
+          <div style="display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">
+            <span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--card2);border:1px solid var(--line);color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;font-weight:700">DW</span>
+            @danaw · 2 days ago · 128 helpful
+          </div>
+        </div>
+      </article>
+
+      <article style="display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)">
+        <div style="position:relative;height:180px"><image-slot id="ht-r2" shape="rect" placeholder="Still"></image-slot></div>
+        <div style="padding:20px 22px 22px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:10px;font-weight:700;padding:4px 8px;border-radius:4px;border:1px solid var(--line);color:var(--dim)">Mixed</span>
+            <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">3 / 5</span>
+          </div>
+          <h3 style="margin:0 0 8px;font-family:'Bodoni Moda',serif;font-size:23px;font-weight:700">Nightshift Radio</h3>
+          <p style="margin:0 0 16px;font-size:15px;line-height:1.55;color:var(--dim);text-wrap:pretty">A great voice performance stuck inside a thriller that keeps explaining itself. Worth it for the first forty minutes.</p>
+          <div style="display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">
+            <span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--card2);border:1px solid var(--line);color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;font-weight:700">RM</span>
+            @ravi_m · 3 days ago · 64 helpful
+          </div>
+        </div>
+      </article>
+
+      <article style="display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)">
+        <div style="position:relative;height:180px"><image-slot id="ht-r3" shape="rect" placeholder="Still"></image-slot></div>
+        <div style="padding:20px 22px 22px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:10px;font-weight:700;padding:4px 8px;border-radius:4px;background:var(--brand);color:var(--onbrand)">Top rated</span>
+            <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">5 / 5</span>
+          </div>
+          <h3 style="margin:0 0 8px;font-family:'Bodoni Moda',serif;font-size:23px;font-weight:700">Salt Flats</h3>
+          <p style="margin:0 0 16px;font-size:15px;line-height:1.55;color:var(--dim);text-wrap:pretty">Shot like a Western, paced like a heist. See it on the biggest screen you can find and sit near the front.</p>
+          <div style="display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">
+            <span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--card2);border:1px solid var(--line);color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;font-weight:700">EC</span>
+            @elliscarr · 5 days ago · 302 helpful
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="showing" style="position:relative;z-index:2;margin-top:64px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)">
+    <div style="position:relative;max-width:1320px;margin:0 auto;padding:52px 28px">
+      <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:start">
+        <div>
+          <h2 style="margin:0 0 6px;font-family:'Bodoni Moda',serif;font-size:34px;font-weight:800">Now showing</h2>
+          <p style="margin:0 0 26px;font-size:15px;color:var(--dim)">Odeon Wardour Street · Today</p>
+
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="display:flex;align-items:center;gap:18px;padding:16px 4px;border-top:1px solid var(--line)">
+              <div style="flex:1;min-width:0">
+                <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:19px;font-weight:700">Salt Flats</h3>
+                <p style="margin:4px 0 0;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">70mm · 131 min</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">13:15</button>
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">16:40</button>
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">20:05</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:18px;padding:16px 4px;border-top:1px solid var(--line)">
+              <div style="flex:1;min-width:0">
+                <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:19px;font-weight:700">Nightshift Radio</h3>
+                <p style="margin:4px 0 0;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">Dolby · 104 min</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">14:00</button>
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">18:30</button>
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">21:45</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:18px;padding:16px 4px;border-top:1px solid var(--line)">
+              <div style="flex:1;min-width:0">
+                <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:19px;font-weight:700">Understudy</h3>
+                <p style="margin:4px 0 0;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">Standard · 101 min</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">12:30</button>
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">15:10</button>
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">19:20</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:18px;padding:16px 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+              <div style="flex:1;min-width:0">
+                <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:19px;font-weight:700">Second House</h3>
+                <p style="margin:4px 0 0;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--dim)">Late show · 89 min</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">22:10</button>
+                <button type="button" style="padding:7px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--brand);color:var(--onbrand);border-color:var(--brand)">23:55</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)">
+          <img src="./assets/theatre-chinese.png" alt="Cinema frontage at night" style="display:block;width:100%;height:420px;object-fit:cover">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.78) 100%);pointer-events:none"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:24px;pointer-events:none">
+            <p style="margin:0 0 6px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:#e9d9b6">Screen of the week</p>
+            <h3 style="margin:0;font-family:'Bodoni Moda',serif;font-size:26px;font-weight:800;color:#fff">The big house, still the best seat</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="top10" style="position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:56px 28px 0">
+    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:22px">
+      <h2 style="margin:0;font-family:'Bodoni Moda',serif;font-size:34px;font-weight:800">Top 10 by user score</h2>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+      <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:var(--dim)">Averaged from verified user ratings</span>
+    </div>
+    <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 44px">
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">01</span><span style="flex:1;font-size:16px;font-weight:500">Salt Flats</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">96</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">06</span><span style="flex:1;font-size:16px;font-weight:500">Copper Wire</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">84</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">02</span><span style="flex:1;font-size:16px;font-weight:500">Marigold Hour</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">94</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">07</span><span style="flex:1;font-size:16px;font-weight:500">Understudy</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">82</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">03</span><span style="flex:1;font-size:16px;font-weight:500">The Long Interval</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">91</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">08</span><span style="flex:1;font-size:16px;font-weight:500">Paper Lanterns</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">79</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">04</span><span style="flex:1;font-size:16px;font-weight:500">Grand Cascade</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">89</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">09</span><span style="flex:1;font-size:16px;font-weight:500">Second House</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">76</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">05</span><span style="flex:1;font-size:16px;font-weight:500">Twelve Winters</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">87</span></li>
+      <li style="display:flex;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)"><span style="font-family:'Bodoni Moda',serif;font-size:28px;font-weight:900;color:var(--brand);min-width:44px">10</span><span style="flex:1;font-size:16px;font-weight:500">Nightshift Radio</span><span style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;font-size:13px;color:var(--dim)">72</span></li>
+    </ol>
+  </section>
+
+  <section id="genres" style="position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:56px 28px 70px">
+    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:22px">
+      <h2 style="margin:0;font-family:'Bodoni Moda',serif;font-size:34px;font-weight:800">Browse by genre</h2>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px">
+      <a href="#genres" style="display:flex;flex-direction:column;justify-content:space-between;height:132px;padding:18px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink)" style-hover="border-color:var(--brand);color:var(--brand)"><span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--dim)">38 films</span><span style="font-family:'Bodoni Moda',serif;font-size:25px;font-weight:800">Drama</span></a>
+      <a href="#genres" style="display:flex;flex-direction:column;justify-content:space-between;height:132px;padding:18px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink)" style-hover="border-color:var(--brand);color:var(--brand)"><span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--dim)">24 films</span><span style="font-family:'Bodoni Moda',serif;font-size:25px;font-weight:800">Thriller</span></a>
+      <a href="#genres" style="display:flex;flex-direction:column;justify-content:space-between;height:132px;padding:18px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink)" style-hover="border-color:var(--brand);color:var(--brand)"><span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--dim)">19 films</span><span style="font-family:'Bodoni Moda',serif;font-size:25px;font-weight:800">Comedy</span></a>
+      <a href="#genres" style="display:flex;flex-direction:column;justify-content:space-between;height:132px;padding:18px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink)" style-hover="border-color:var(--brand);color:var(--brand)"><span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--dim)">15 films</span><span style="font-family:'Bodoni Moda',serif;font-size:25px;font-weight:800">Horror</span></a>
+      <a href="#genres" style="display:flex;flex-direction:column;justify-content:space-between;height:132px;padding:18px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink)" style-hover="border-color:var(--brand);color:var(--brand)"><span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--dim)">27 films</span><span style="font-family:'Bodoni Moda',serif;font-size:25px;font-weight:800">Documentary</span></a>
+      <a href="#genres" style="display:flex;flex-direction:column;justify-content:space-between;height:132px;padding:18px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink)" style-hover="border-color:var(--brand);color:var(--brand)"><span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--dim)">11 films</span><span style="font-family:'Bodoni Moda',serif;font-size:25px;font-weight:800">Classics</span></a>
+    </div>
+  </section>
+
+  <footer style="position:relative;z-index:2;border-top:1px solid var(--line);background:var(--bg2)">
+    <div style="max-width:1320px;margin:0 auto;padding:34px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <span style="font-family:'Bodoni Moda',serif;font-size:19px;font-weight:900">Hot Take</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--dim)">Reviews written by film fans since 2019</span>
+      <div style="flex:1"></div>
+      <div style="display:flex;gap:22px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:600">
+        <a href="#reviews">Community rules</a>
+        <a href="#showing">Cinemas</a>
+        <a href="#top10">Archive</a>
+      </div>
+    </div>
+  </footer>
+
+  <sc-if value="{{ authOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeAuth }}" style="position:fixed;inset:0;z-index:90;background:rgba(20,4,4,.62);backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px">
+      <div onClick="{{ stop }}" style="width:100%;max-width:420px;background:var(--card);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);overflow:hidden">
+        <div style="height:10px;background:repeating-linear-gradient(90deg,#a5121c 0 6px,#f6e9dc 6px 12px)"></div>
+        <div style="padding:26px 28px 28px">
+          <div style="display:flex;gap:18px;margin-bottom:22px;border-bottom:1px solid var(--line)">
+            <button type="button" onClick="{{ showLogin }}" style="padding:0 0 12px;border:0;background:transparent;cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700;color:{{ loginTabColor }};border-bottom:2px solid {{ loginTabLine }};margin-bottom:-1px">Log in</button>
+            <button type="button" onClick="{{ showSignup }}" style="padding:0 0 12px;border:0;background:transparent;cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700;color:{{ signupTabColor }};border-bottom:2px solid {{ signupTabLine }};margin-bottom:-1px">Sign up</button>
+          </div>
+          <h2 style="margin:0 0 6px;font-family:'Bodoni Moda',serif;font-size:26px;font-weight:800">{{ authTitle }}</h2>
+          <p style="margin:0 0 20px;font-size:14px;line-height:1.5;color:var(--dim)">{{ authBlurb }}</p>
+          <form onSubmit="{{ submitAuth }}" style="display:flex;flex-direction:column;gap:14px">
+            <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+              <label style="display:flex;flex-direction:column;gap:6px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--dim)">Display name
+                <input name="name" type="text" placeholder="Sam Okafor" style="padding:11px 13px;border:1px solid var(--line);border-radius:4px;background:var(--card2);color:var(--ink);font-family:Barlow,sans-serif;font-size:15px;outline:0">
+              </label>
+            </sc-if>
+            <label style="display:flex;flex-direction:column;gap:6px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--dim)">Email
+              <input name="email" type="email" required="{{ true }}" placeholder="you@example.com" style="padding:11px 13px;border:1px solid var(--line);border-radius:4px;background:var(--card2);color:var(--ink);font-family:Barlow,sans-serif;font-size:15px;outline:0">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--dim)">Password
+              <input name="password" type="password" required="{{ true }}" placeholder="••••••••" style="padding:11px 13px;border:1px solid var(--line);border-radius:4px;background:var(--card2);color:var(--ink);font-family:Barlow,sans-serif;font-size:15px;outline:0">
+            </label>
+            <button type="submit" style="margin-top:6px;padding:13px;border:1px solid var(--brand);border-radius:999px;background:var(--brand);color:var(--onbrand);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700" style-hover="filter:brightness(1.08)">{{ authAction }}</button>
+          </form>
+          <button type="button" onClick="{{ closeAuth }}" style="margin-top:16px;width:100%;border:0;background:transparent;color:var(--dim);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700" style-hover="color:var(--brand)">Not now</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ composerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeComposer }}" style="position:fixed;inset:0;z-index:90;background:rgba(20,4,4,.62);backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px">
+      <div onClick="{{ stop }}" style="width:100%;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);overflow:hidden">
+        <div style="height:10px;background:repeating-linear-gradient(90deg,#a5121c 0 6px,#f6e9dc 6px 12px)"></div>
+        <div style="padding:26px 28px 28px">
+          <h2 style="margin:0 0 6px;font-family:'Bodoni Moda',serif;font-size:26px;font-weight:800">Write your hot take</h2>
+          <p style="margin:0 0 20px;font-size:14px;line-height:1.5;color:var(--dim)">Posting as {{ userHandle }}. Keep it to what you thought, not what happens.</p>
+          <form onSubmit="{{ submitReview }}" style="display:flex;flex-direction:column;gap:14px">
+            <label style="display:flex;flex-direction:column;gap:6px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--dim)">Film
+              <input name="film" type="text" required="{{ true }}" placeholder="Salt Flats" style="padding:11px 13px;border:1px solid var(--line);border-radius:4px;background:var(--card2);color:var(--ink);font-family:Barlow,sans-serif;font-size:15px;outline:0">
+            </label>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--dim)">Your score</span>
+              <div style="display:flex;gap:8px">
+                <button type="button" onClick="{{ setRate1 }}" aria-label="1 out of 5" style="width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:{{ rate1Bg }};cursor:pointer;color:{{ rate1Fg }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+                </button>
+                <button type="button" onClick="{{ setRate2 }}" aria-label="2 out of 5" style="width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:{{ rate2Bg }};cursor:pointer;color:{{ rate2Fg }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+                </button>
+                <button type="button" onClick="{{ setRate3 }}" aria-label="3 out of 5" style="width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:{{ rate3Bg }};cursor:pointer;color:{{ rate3Fg }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+                </button>
+                <button type="button" onClick="{{ setRate4 }}" aria-label="4 out of 5" style="width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:{{ rate4Bg }};cursor:pointer;color:{{ rate4Fg }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+                </button>
+                <button type="button" onClick="{{ setRate5 }}" aria-label="5 out of 5" style="width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:{{ rate5Bg }};cursor:pointer;color:{{ rate5Fg }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="8" cy="9" r="5" fill="currentColor"></circle><circle cx="16" cy="8" r="4.4" fill="currentColor"></circle><circle cx="12" cy="15" r="5.6" fill="currentColor"></circle></svg>
+                </button>
+              </div>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:6px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--dim)">Your take
+              <textarea name="body" required="{{ true }}" rows="4" placeholder="Two hours of people not saying the thing, and it earns every silence." style="padding:11px 13px;border:1px solid var(--line);border-radius:4px;background:var(--card2);color:var(--ink);font-family:Barlow,sans-serif;font-size:15px;line-height:1.5;outline:0;resize:vertical"></textarea>
+            </label>
+            <button type="submit" style="margin-top:6px;padding:13px;border:1px solid var(--brand);border-radius:999px;background:var(--brand);color:var(--onbrand);cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700" style-hover="filter:brightness(1.08)">Post review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;},&quot;coverflowTilt&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:34,&quot;min&quot;:0,&quot;max&quot;:55,&quot;step&quot;:1,&quot;unit&quot;:&quot;deg&quot;,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    var stored = null;
+    try { stored = localStorage.getItem('hottake-theme'); } catch(e) {}
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('hottake-user') || 'null'); } catch(e) {}
+    this.state = {
+      theme: stored || (p && p.defaultTheme) || 'light',
+      user: user,
+      authOpen: false,
+      authMode: 'login',
+      composerOpen: false,
+      draftScore: 4,
+      myReviews: []
+    };
+    this.rail = null;
+    this.railRef = (el) => { this.rail = el; if (el) this.bindRail(el); };
+  }
+
+  componentDidMount(){ this.applyTheme(); }
+  componentDidUpdate(){ this.applyTheme(); }
+  componentWillUnmount(){ if (this._raf) cancelAnimationFrame(this._raf); }
+
+  applyTheme(){
+    var t = this.state.theme;
+    document.documentElement.setAttribute('data-hottake-theme', t);
+    document.body.setAttribute('data-hottake-theme', t);
+    try { localStorage.setItem('hottake-theme', t); } catch(e) {}
+  }
+
+  bindRail(rail){
+    if (rail._htBound) return;
+    rail._htBound = true;
+    var self = this;
+    var maxTilt = (this.props && this.props.coverflowTilt != null) ? this.props.coverflowTilt : 34;
+
+    var paint = function(){
+      var cards = rail.querySelectorAll('[data-card]');
+      var mid = rail.scrollLeft + rail.clientWidth / 2;
+      for (var i = 0; i < cards.length; i++){
+        var c = cards[i];
+        var cc = c.offsetLeft + c.offsetWidth / 2;
+        var d = (cc - mid) / (c.offsetWidth + 34);
+        var k = Math.max(-2.4, Math.min(2.4, d));
+        var a = Math.abs(k);
+        var scale = 1.08 - Math.min(0.3, a * 0.16);
+        var rot = -k * maxTilt * (1 / (1 + a * 0.5));
+        var z = -Math.min(260, a * 130);
+        var y = Math.min(26, a * 14);
+        c.style.transform = 'translateY(' + y + 'px) translateZ(' + z + 'px) rotateY(' + rot.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')';
+        c.style.opacity = String(Math.max(0.42, 1 - a * 0.28));
+        c.style.zIndex = String(100 - Math.round(a * 10));
+      }
+    };
+    this.paintRail = paint;
+
+    var schedule = function(){
+      if (self._raf) return;
+      self._raf = requestAnimationFrame(function(){ self._raf = null; paint(); });
+    };
+    rail.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+
+    // wheel: vertical wheel over the rail flicks it sideways
+    rail.addEventListener('wheel', function(e){
+      var dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(e.deltaX) < Math.abs(e.deltaY)) {
+        var atStart = rail.scrollLeft <= 0 && dx < 0;
+        var atEnd = rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 1 && dx > 0;
+        if (atStart || atEnd) return; // let the page scroll take over
+        e.preventDefault();
+      }
+      rail.scrollLeft += dx;
+    }, { passive: false });
+
+    // drag-to-flick with inertia + snap
+    var down = false, startX = 0, startScroll = 0, lastX = 0, lastT = 0, vel = 0, moved = false, inertia = null;
+    var stopInertia = function(){ if (inertia) { cancelAnimationFrame(inertia); inertia = null; } };
+
+    var snap = function(){
+      var cards = rail.querySelectorAll('[data-card]');
+      var mid = rail.scrollLeft + rail.clientWidth / 2, best = null, bd = Infinity;
+      for (var i = 0; i < cards.length; i++){
+        var cc = cards[i].offsetLeft + cards[i].offsetWidth / 2;
+        if (Math.abs(cc - mid) < bd) { bd = Math.abs(cc - mid); best = cc; }
+      }
+      if (best != null) rail.scrollTo({ left: best - rail.clientWidth / 2, behavior: 'smooth' });
+    };
+
+    var glide = function(){
+      vel *= 0.94;
+      rail.scrollLeft -= vel;
+      if (Math.abs(vel) > 0.4 && rail.scrollLeft > 0 && rail.scrollLeft < rail.scrollWidth - rail.clientWidth) {
+        inertia = requestAnimationFrame(glide);
+      } else {
+        inertia = null;
+        rail.style.scrollSnapType = 'x proximity';
+        snap();
+      }
+    };
+
+    rail.addEventListener('pointerdown', function(e){
+      if (e.target.closest && e.target.closest('image-slot')) return;
+      stopInertia();
+      down = true; moved = false;
+      startX = lastX = e.clientX; startScroll = rail.scrollLeft;
+      lastT = performance.now(); vel = 0;
+      rail.style.scrollSnapType = 'none';
+      rail.style.cursor = 'grabbing';
+    });
+    window.addEventListener('pointermove', function(e){
+      if (!down) return;
+      var now = performance.now(), dt = Math.max(1, now - lastT);
+      vel = (e.clientX - lastX) / dt * 16;
+      lastX = e.clientX; lastT = now;
+      if (Math.abs(e.clientX - startX) > 3) moved = true;
+      rail.scrollLeft = startScroll - (e.clientX - startX);
+    });
+    var release = function(){
+      if (!down) return;
+      down = false;
+      rail.style.cursor = 'grab';
+      if (moved && Math.abs(vel) > 1) glide();
+      else { rail.style.scrollSnapType = 'x proximity'; snap(); }
+    };
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);
+
+    rail.addEventListener('click', function(e){
+      if (moved) { e.preventDefault(); e.stopPropagation(); return; }
+      var card = e.target.closest && e.target.closest('[data-card]');
+      if (card) self.centerOn(card);
+    }, true);
+
+    requestAnimationFrame(function(){ paint(); self.centerIndex(0); requestAnimationFrame(paint); });
+  }
+
+  centerOn(card){
+    if (!this.rail) return;
+    var cc = card.offsetLeft + card.offsetWidth / 2;
+    this.rail.scrollTo({ left: cc - this.rail.clientWidth / 2, behavior: 'smooth' });
+  }
+
+  centerIndex(i){
+    if (!this.rail) return;
+    var cards = this.rail.querySelectorAll('[data-card]');
+    if (cards[i]) this.centerOn(cards[i]);
+  }
+
+  step(dir){
+    var rail = this.rail;
+    if (!rail) return;
+    var cards = rail.querySelectorAll('[data-card]');
+    var mid = rail.scrollLeft + rail.clientWidth / 2, idx = 0, bd = Infinity;
+    for (var i = 0; i < cards.length; i++){
+      var cc = cards[i].offsetLeft + cards[i].offsetWidth / 2;
+      if (Math.abs(cc - mid) < bd) { bd = Math.abs(cc - mid); idx = i; }
+    }
+    this.centerIndex(Math.max(0, Math.min(cards.length - 1, idx + dir)));
+  }
+
+  initials(name){
+    var parts = String(name || '').trim().split(/\s+/).slice(0, 2);
+    var out = parts.map(function(p){ return p.charAt(0).toUpperCase(); }).join('');
+    return out || 'HT';
+  }
+
+  handleFrom(name, email){
+    var base = (name && name.trim()) ? name.trim().split(/\s+/)[0] : String(email || 'you').split('@')[0];
+    return '@' + base.toLowerCase().replace(/[^a-z0-9_]/g, '');
+  }
+
+  setUser(u){
+    try { u ? localStorage.setItem('hottake-user', JSON.stringify(u)) : localStorage.removeItem('hottake-user'); } catch(e) {}
+    this.setState({ user: u });
+  }
+
+  submitAuth(e){
+    e.preventDefault();
+    var fd = new FormData(e.target);
+    var name = fd.get('name') || '';
+    var email = fd.get('email') || '';
+    var u = { name: name || String(email).split('@')[0], email: email, handle: this.handleFrom(name, email) };
+    u.initials = this.initials(u.name);
+    this.setUser(u);
+    var wanted = this._pendingCompose;
+    this._pendingCompose = false;
+    this.setState({ authOpen: false, composerOpen: !!wanted });
+  }
+
+  submitReview(e){
+    e.preventDefault();
+    var fd = new FormData(e.target);
+    var u = this.state.user || {};
+    var rev = {
+      film: fd.get('film'),
+      body: fd.get('body'),
+      score: this.state.draftScore,
+      initials: u.initials || 'HT',
+      byline: (u.handle || '@you') + ' · just now'
+    };
+    this.setState(function(s){ return { myReviews: [rev].concat(s.myReviews), composerOpen: false, draftScore: 4 }; });
+  }
+
+  wantCompose(){
+    if (this.state.user) this.setState({ composerOpen: true });
+    else { this._pendingCompose = true; this.setState({ authOpen: true, authMode: 'signup' }); }
+  }
+
+  renderVals(){
+    var dark = this.state.theme === 'dark';
+    var s = this.state;
+    var u = s.user;
+    var signup = s.authMode === 'signup';
+    var on = 'var(--brand)', off = 'transparent', onFg = 'var(--onbrand)', offFg = 'var(--rateoff)';
+    var rate = {};
+    for (var i = 1; i <= 5; i++){
+      rate['rate' + i + 'Bg'] = i <= s.draftScore ? on : off;
+      rate['rate' + i + 'Fg'] = i <= s.draftScore ? onFg : offFg;
+      rate['setRate' + i] = (function(self, n){ return function(){ self.setState({ draftScore: n }); }; })(this, i);
+    }
+    return Object.assign(rate, {
+      railRef: this.railRef,
+      reviewCountLabel: (12480 + s.myReviews.length).toLocaleString('en-US'),
+      signedIn: !!u,
+      signedOut: !u,
+      userHandle: u ? u.handle : '',
+      userInitials: u ? u.initials : '',
+      myReviews: s.myReviews,
+      authOpen: s.authOpen,
+      composerOpen: s.composerOpen,
+      isSignup: signup,
+      authTitle: signup ? 'Join Hot Take' : 'Welcome back',
+      authBlurb: signup ? 'Free account. Rate films, post takes, keep a watch history.' : 'Log in to post reviews and vote on other takes.',
+      authAction: signup ? 'Create account' : 'Log in',
+      loginTabColor: signup ? 'var(--dim)' : 'var(--brand)',
+      signupTabColor: signup ? 'var(--brand)' : 'var(--dim)',
+      loginTabLine: signup ? 'transparent' : 'var(--brand)',
+      signupTabLine: signup ? 'var(--brand)' : 'transparent',
+      openLogin: () => this.setState({ authOpen: true, authMode: 'login' }),
+      openSignup: () => this.setState({ authOpen: true, authMode: 'signup' }),
+      showLogin: () => this.setState({ authMode: 'login' }),
+      showSignup: () => this.setState({ authMode: 'signup' }),
+      closeAuth: () => { this._pendingCompose = false; this.setState({ authOpen: false }); },
+      logout: () => this.setUser(null),
+      openComposer: () => this.wantCompose(),
+      closeComposer: () => this.setState({ composerOpen: false }),
+      submitAuth: (e) => this.submitAuth(e),
+      submitReview: (e) => this.submitReview(e),
+      stop: (e) => e.stopPropagation(),
+      railPrev: () => this.step(-1),
+      railNext: () => this.step(1),
+      themeLabel: dark ? 'Oscars' : 'Popcorn',
+      themeGlyph: dark ? '\u2605' : '\u25CF',
+      toggleTheme: () => this.setState({ theme: dark ? 'light' : 'dark' })
+    });
+  }
+}
+
+</script>
+</body>
+</html>
