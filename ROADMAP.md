@@ -62,6 +62,10 @@ deferred is listed under "After v1" below — it is not dropped, just not blocki
 - [x] Search bar: functional over `lib/data.ts`, case-insensitive, filtering films and
       shows together. Filter state lives in `ThemeUserProvider` so the header, the genre
       tiles and both rails share one source of truth
+- [x] Global search over TMDb (`lib/tmdb.ts` behind `/api/search`) — any film or series can
+      be found and reviewed, not just the catalogue. fanart.tv cannot do this: it is keyed
+      by id and a title lookup returns `{}`, so TMDb supplies search and the ids while
+      fanart keeps supplying artwork for our own pages
 - [x] Browse/filter by genre — the tiles are now toggle buttons carrying `aria-pressed`.
       Genre counts are derived from the catalogue instead of hardcoded, so a tile can no
       longer promise 27 documentaries and filter down to nothing
@@ -156,6 +160,9 @@ down what broke; anything found here goes back into Phase 1–3 before you conti
 - [ ] Seed the database with those rows, carrying the `tmdbId`/`tvdbId` columns across so
       posters keep resolving once the data moves out of `lib/data.ts`
 - [ ] Add `@supabase/supabase-js` (and `@supabase/ssr` for server components), `.env.local` with the project URL/anon key, keep it out of git
+- [ ] Persist externally-searched titles: reviewing a TMDb result currently stores only the
+      title string. Insert the title into `titles` (with its tmdb_id) on first review so it
+      gains a real page like the rest of the catalogue
 - [ ] Replace `ThemeUserProvider`'s fake localStorage auth with real Supabase Auth (sign up, log in, log out, session persistence, password reset)
 - [ ] Replace the hardcoded `communityReviews` in `lib/data.ts` with a live query, and make `submitReview` insert into the `reviews` table instead of local state only
 - [ ] Move review votes (DECISIONS §8) into the database — they are per-browser
@@ -179,7 +186,9 @@ confirm you get an error state, not a blank page.
 
 - [ ] Merge the working branch into `dev`, then `dev` into `main` per the repo's branch convention
 - [ ] Create the Vercel project, link the GitHub repo
-- [ ] Add the Supabase URL/anon key (and any other secrets) as Vercel environment variables
+- [ ] Add every secret as a Vercel environment variable: the Supabase URL/anon key **plus
+      `FANART_API_KEY` and `TMDB_API_KEY`** — both are in `.env.local`, which is gitignored,
+      so a deploy without them silently loses posters and global search
 - [ ] Deploy, then smoke-test the live production URL end to end
 - [ ] (Optional) connect a custom domain
 
