@@ -11,6 +11,7 @@ import { Genres } from "@/components/Genres";
 import { Footer } from "@/components/Footer";
 import { AuthModal } from "@/components/AuthModal";
 import { ComposerModal } from "@/components/ComposerModal";
+import { ChatWidget } from "@/components/ChatWidget";
 import { communityReviews, buildGenres } from "@/lib/data";
 import { getMovies, getShows } from "@/lib/catalogue";
 import { getPosterMap, getBackdropMap, type ArtLookup } from "@/lib/fanart";
@@ -56,6 +57,7 @@ export default async function Home() {
       <Footer />
       <AuthModal />
       <ComposerModal />
+      <ChatWidget />
     </div>
   );
 }
