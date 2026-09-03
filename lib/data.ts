@@ -173,18 +173,81 @@ export type Show = {
   seasons: number;
   score: number;
   tvdbId: number;
+  creator: string;
+  firstAiredDate: string; // human-readable, for the profile page
+  summary: string;
 };
 
 export const tvShows: Show[] = [
-  { slug: "breaking-bad", title: "Breaking Bad", genre: "Crime", firstAired: 2008, seasons: 5, score: 5, tvdbId: 81189 },
-  { slug: "the-sopranos", title: "The Sopranos", genre: "Drama", firstAired: 1999, seasons: 6, score: 5, tvdbId: 75299 },
-  { slug: "the-wire", title: "The Wire", genre: "Crime", firstAired: 2002, seasons: 5, score: 5, tvdbId: 79126 },
-  { slug: "chernobyl", title: "Chernobyl", genre: "Drama", firstAired: 2019, seasons: 1, score: 5, tvdbId: 360893 },
-  { slug: "severance", title: "Severance", genre: "Thriller", firstAired: 2022, seasons: 2, score: 4, tvdbId: 371980 },
-  { slug: "stranger-things", title: "Stranger Things", genre: "Horror", firstAired: 2016, seasons: 4, score: 4, tvdbId: 305288 },
-  { slug: "game-of-thrones", title: "Game of Thrones", genre: "Epic", firstAired: 2011, seasons: 8, score: 4, tvdbId: 121361 },
-  { slug: "the-office", title: "The Office (US)", genre: "Comedy", firstAired: 2005, seasons: 9, score: 4, tvdbId: 73244 },
+  {
+    slug: "breaking-bad", title: "Breaking Bad", genre: "Crime", firstAired: 2008, seasons: 5, score: 5, tvdbId: 81189,
+    creator: "Vince Gilligan",
+    firstAiredDate: "January 20, 2008",
+    summary:
+      "A high school chemistry teacher diagnosed with terminal cancer starts cooking methamphetamine to provide for his family, and discovers he is far better at it, and far worse a man, than anyone suspected.",
+  },
+  {
+    slug: "the-sopranos", title: "The Sopranos", genre: "Drama", firstAired: 1999, seasons: 6, score: 5, tvdbId: 75299,
+    creator: "David Chase",
+    firstAiredDate: "January 10, 1999",
+    summary:
+      "A New Jersey mob boss begins seeing a psychiatrist for panic attacks, and the two halves of his life - the family he kills for and the family he comes home to - refuse to stay apart.",
+  },
+  {
+    slug: "the-wire", title: "The Wire", genre: "Crime", firstAired: 2002, seasons: 5, score: 5, tvdbId: 79126,
+    creator: "David Simon",
+    firstAiredDate: "June 2, 2002",
+    summary:
+      "Baltimore seen from every side at once - the corners, the docks, the schools, the newsroom and the police who work them - in a portrait of a city where the institutions fail everyone equally.",
+  },
+  {
+    slug: "chernobyl", title: "Chernobyl", genre: "Drama", firstAired: 2019, seasons: 1, score: 5, tvdbId: 360893,
+    creator: "Craig Mazin",
+    firstAiredDate: "May 6, 2019",
+    summary:
+      "The 1986 reactor explosion and the months that followed, told through the people sent to contain it and the cost of the lies told before, during and after.",
+  },
+  {
+    slug: "severance", title: "Severance", genre: "Thriller", firstAired: 2022, seasons: 2, score: 4, tvdbId: 371980,
+    creator: "Dan Erickson",
+    firstAiredDate: "February 18, 2022",
+    summary:
+      "Employees at a mysterious corporation undergo a procedure that splits their work memories from their personal ones, until the two selves start trying to reach each other.",
+  },
+  {
+    slug: "stranger-things", title: "Stranger Things", genre: "Horror", firstAired: 2016, seasons: 4, score: 4, tvdbId: 305288,
+    creator: "The Duffer Brothers",
+    firstAiredDate: "July 15, 2016",
+    summary:
+      "When a boy vanishes from a small Indiana town in 1983, his friends uncover a government experiment, a girl with impossible powers, and a door to somewhere that should have stayed shut.",
+  },
+  {
+    slug: "game-of-thrones", title: "Game of Thrones", genre: "Epic", firstAired: 2011, seasons: 8, score: 4, tvdbId: 121361,
+    creator: "David Benioff and D. B. Weiss",
+    firstAiredDate: "April 17, 2011",
+    summary:
+      "Noble families wage war for a continent's throne while an older, colder threat gathers beyond the wall in the north, largely ignored by everyone with an army.",
+  },
+  {
+    slug: "the-office", title: "The Office (US)", genre: "Comedy", firstAired: 2005, seasons: 9, score: 4, tvdbId: 73244,
+    creator: "Greg Daniels",
+    firstAiredDate: "March 24, 2005",
+    summary:
+      "A documentary crew films the staff of a failing paper company in Scranton, Pennsylvania, and the branch manager who wants, more than anything, to be liked.",
+  },
 ];
+
+export function getShowBySlug(slug: string): Show | undefined {
+  return tvShows.find((s) => s.slug === slug);
+}
+
+/** The show equivalent of similarMovies: same genre first, then best-rated. */
+export function similarShows(show: Show, limit = 4): Show[] {
+  const others = tvShows.filter((s) => s.slug !== show.slug);
+  const sameGenre = others.filter((s) => s.genre === show.genre);
+  const rest = others.filter((s) => s.genre !== show.genre).sort((a, b) => b.score - a.score);
+  return [...sameGenre, ...rest].slice(0, limit);
+}
 
 export type CommunityReview = {
   id: string;

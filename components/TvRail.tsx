@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { filterShows } from "@/lib/data";
 import { HeatScale } from "@/components/HeatScale";
 import { Poster } from "@/components/Poster";
@@ -44,6 +45,7 @@ export function TvRail({ posters }: { posters: Record<string, string | null> }) 
       >
         {shows.map((s) => (
           <li key={s.slug}>
+            <Link href={`/shows/${s.slug}`} style={{ display: "block", color: "inherit" }}>
             <div
               style={{
                 padding: 10,
@@ -78,6 +80,7 @@ export function TvRail({ posters }: { posters: Record<string, string | null> }) 
               </p>
               <HeatScale score={s.score} />
             </div>
+            </Link>
           </li>
         ))}
       </ul>

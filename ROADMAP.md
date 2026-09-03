@@ -103,7 +103,10 @@ announces the label. If that fails, the rating input is not done.
 - [ ] Custom 404 page (an invalid `/movies/slug` currently falls through to Next's
       stock "This page could not be found", not a themed one)
 - [ ] Real destinations for the footer links (Community rules, Cinemas, Archive currently just anchor back to sections on the homepage)
-- [ ] TV show detail pages — shows still have no equivalent of the movie profile page
+- [x] TV show detail pages — `/shows/[slug]`, with `ShowHero` mirroring `MovieHero`.
+      The "On the small screen" cards link into them. `MovieReviews` became
+      `TitleReviews` and `SimilarMovies` became `SimilarTitles` so films and shows
+      share them rather than keeping two near-identical copies
 
 **How to verify Phase 2:** `npm run dev`, then click a poster — it should open that
 film's page rather than doing nothing. Visit `/some-nonsense-url` and confirm you get

@@ -6,8 +6,8 @@ import { AuthModal } from "@/components/AuthModal";
 import { ComposerModal } from "@/components/ComposerModal";
 import { MovieHero } from "@/components/MovieHero";
 import { MovieShowtimes } from "@/components/MovieShowtimes";
-import { MovieReviews } from "@/components/MovieReviews";
-import { SimilarMovies } from "@/components/SimilarMovies";
+import { TitleReviews } from "@/components/TitleReviews";
+import { SimilarTitles } from "@/components/SimilarTitles";
 import { lobbyMovies, getMovieBySlug, similarMovies, communityReviews, showtimes } from "@/lib/data";
 import { getPoster, getBackdrop, getPosterMap, type ArtLookup } from "@/lib/fanart";
 
@@ -53,8 +53,8 @@ export default async function MovieProfilePage({ params }: { params: { slug: str
       </section>
 
       <MovieShowtimes movie={movie} showtime={showtime} />
-      <MovieReviews movie={movie} reviews={reviewsForMovie} />
-      <SimilarMovies movies={related} posters={relatedPosters} />
+      <TitleReviews title={movie.title} reviews={reviewsForMovie} />
+      <SimilarTitles items={related} posters={relatedPosters} basePath="/movies" />
 
       <Footer />
       <AuthModal />

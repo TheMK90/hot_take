@@ -1,12 +1,13 @@
 "use client";
 
-import type { CommunityReview, Movie } from "@/lib/data";
+import type { CommunityReview } from "@/lib/data";
 import { useApp } from "@/components/ThemeUserProvider";
 import { WriteReviewButton } from "@/components/WriteReviewButton";
 
-export function MovieReviews({ movie, reviews }: { movie: Movie; reviews: CommunityReview[] }) {
+// Works for any titled thing -- films and shows both.
+export function TitleReviews({ title, reviews }: { title: string; reviews: CommunityReview[] }) {
   const { myReviews } = useApp();
-  const ownReviews = myReviews.filter((r) => r.film === movie.title);
+  const ownReviews = myReviews.filter((r) => r.film === title);
   const hasAny = ownReviews.length > 0 || reviews.length > 0;
 
   return (
@@ -14,12 +15,12 @@ export function MovieReviews({ movie, reviews }: { movie: Movie; reviews: Commun
       <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 22 }}>
         <h2 style={{ margin: 0, fontFamily: "var(--font-bodoni), serif", fontSize: 26, fontWeight: 800 }}>Reviews</h2>
         <div style={{ flex: 1, height: 1, background: "var(--line)" }} />
-        <WriteReviewButton film={movie.title} label="Write a review" />
+        <WriteReviewButton film={title} label="Write a review" />
       </div>
 
       {!hasAny && (
         <p style={{ fontSize: 15, color: "var(--dim)", padding: "8px 0 4px" }}>
-          No reviews yet for {movie.title}. Be the first to leave a hot take.
+          No reviews yet for {title}. Be the first to leave a hot take.
         </p>
       )}
 
